@@ -1,0 +1,15 @@
+body{
+  background-color: #12428e;
+}
+
+.container {
+  color: #e8ebef;
+}
+
+.typed::after {
+	content: '|';
+	display: inline;
+	-webkit-animation: blink 0.7s infinite;
+	-moz-animation: blink 0.7s infinite;
+	animation: blink 0.7s infinite;
+}

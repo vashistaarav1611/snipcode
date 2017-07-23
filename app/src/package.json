@@ -1,13 +1,31 @@
 {
-  "name": "quickstart-docker-express-example",
+  "name": "snipcode",
   "version": "1.0.0",
   "description": "Demo to show git push build and deploy",
   "scripts": {
     "start": "node server.js"
   },
-  "author": "",
+  "author": "Sumit Roy",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.14.0"
-  }
+    "body-parser": "^1.17.2",
+    "docco": "^0.7.0",
+    "ejs": "^2.5.6",
+    "express": "^4.14.0",
+    "node-fetch": "^1.7.1"
+  },
+  "main": "server.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sroy8091/snipcode.git"
+  },
+  "keywords": [
+    "code",
+    "saver"
+  ],
+  "bugs": {
+    "url": "https://github.com/sroy8091/snipcode/issues"
+  },
+  "homepage": "https://github.com/sroy8091/snipcode#readme"
 }
