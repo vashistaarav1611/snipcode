@@ -1,19 +1,28 @@
+/* ---------TODOS----------*/
+
+// A nice landing page is to be added. --done
+//finding a way to render css and js files in node--done
+//login and signup using hausura auth api--done
+// printing logged in user's name.
+// adding all pages ejs.
+//adding a user in hasura db and inserting a snipcode using hasura data api
+
+/* ------------------------ */
+
 const express = require('express');
 const path = require('path');
 const fetch = require('node-fetch');
+const cookieParser = require('cookie-parser');
 const app = express();
 
 //setting static files location
 app.use(express.static(path.join(__dirname, 'static')));
 
+// for the love of cookies :P
+app.use(cookieParser());
+
 //setting the view engine
 app.set("view engine", 'ejs');
-
-
-// A nice landing page is to be added.
-//finding a way to render css and js files in node--done
-//login and signup using hausura auth api--done
-//adding a user in hasura db and inserting a snipcode using hasura data api
 
 
 /* body parser is used for handling post request.
@@ -26,9 +35,12 @@ them from root project directory.
 In this case we are defining the root as /home/sroy/snipcode/app/src i.e current directory.*/
 const root = process.cwd();
 
+
 //home page route
-app.get('/', function (req, res) {
-    res.render("index.ejs");
+app.get('/' ,function (req, res) {
+    console.log(req.cookies.userName);
+    const user = req.cookies.userName;
+    res.render("index.ejs", {user: user});
 });
 
 // login page route
@@ -38,40 +50,43 @@ app.get('/login', function (req, res) {
 
 //post request for login using hasura auth api
 app.post('/login', function(req, res) {
-	const schemaFetchUrl = 'http://auth.c100.hasura.me/login';
+	const authUrl = 'http://auth.c100.hasura.me/login';
+    const username = req.body.username;
 	const options = {
 	  method: 'POST',
       headers: {
 	      'Content-Type':'application/json'
       },
         body: JSON.stringify({
-            username: req.body.username,
+            username: username,
             password: req.body.password
         })
     };
-	fetch(schemaFetchUrl, options)
+	fetch(authUrl, options, {credentials: 'include'})
         .then(function (res) {
             console.log('status: '+res.status);
             return res.json();
         }).then(function (json) {
-        console.log(json);
-        headers.Authorization = 'Bearer'+ json['auth_token'];
-        headers['X-Hasura-User-Id'] = json['hasura_id'];
-        headers['X-Hasura-Role'] = json['hasura_roles'][0];
-        console.log(headers);
+        // console.log(json);
+        res.cookie("userId", json['hasura_id']);
+        res.cookie("userName",username);
+        res.cookie("Authorization" , json['auth_token']);
+        // console.log(res.cookie);
+        res.redirect("/");
+    }).catch(function (err){
+       // console.error(err);
+       res.redirect("/login");
     });
-	res.redirect('/login');
-	console.log();
 });
 
 //register/signup route
-app.get('/register', function(req, res) {
+app.get('/register', isLoggedIn , function(req, res) {
 	res.render("register");
 });
 
 //post route for register/signup
 app.post('/register', function (req, res) {
-    const schemaFetchUrl = 'http://auth.c100.hasura.me/signup';
+    const authUrl = 'http://auth.c100.hasura.me/signup';
     const options = {
         method: 'POST',
         headers: {
@@ -84,7 +99,7 @@ app.post('/register', function (req, res) {
             // email: req.body.email
         })
     };
-    fetch(schemaFetchUrl, options)
+    fetch(authUrl, options)
         .then(function(res) {
             return res.json();
         }).then(function(json) {
