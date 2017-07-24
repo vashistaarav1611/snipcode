@@ -80,7 +80,7 @@ app.post('/login', function(req, res) {
 });
 
 //register/signup route
-app.get('/register', isLoggedIn , function(req, res) {
+app.get('/register' , function(req, res) {
 	res.render("register");
 });
 
