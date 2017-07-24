@@ -1,9 +1,30 @@
+@font-face {
+    font-family: zilap;
+    src: url("../fonts/zilap.ttf");
+}
+
+@font-face {
+    font-family: gnu;
+    src: url("../fonts/gnu.ttf");
+}
+
 body{
   background-color: #12428e;
 }
 
 .container {
   color: #e8ebef;
+}
+
+.titl h1 {
+    font-size: 14vw;
+    font-family: zilap;
+}
+
+.adj {
+    margin-top: 3vw;
+    font-size: 4vw;
+    font-family: gnu;
 }
 
 .typed::after {
