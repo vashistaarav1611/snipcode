@@ -23,6 +23,9 @@
       </label>
       <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>   
     </form>
+          <% if (rstatus) { %>
+          <h5 class="text-center text-danger"><%= rstatus %></h5>
+          <% } %>
   </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
