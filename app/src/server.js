@@ -1,4 +1,3 @@
-
 /* ---------TODOS----------*/
 
 // A nice landing page is to be added. --done
@@ -10,7 +9,8 @@
 // showing errors of login and registration --done
 // dynamic dropdown.
 // segregating header and footer.
-// getting the dashboard page
+// getting the dashboard page --done
+// beautyfying last_updated in dashboard
 // new snip page
 // search page like wikipedia search
 // redirecting logged in user's to dashboard and registered user to new snip
@@ -39,7 +39,7 @@ app.set("view engine", 'ejs');
 /* body parser is used for handling post request.
 Previous versions of express includes this but from version 4 it comes as an external package */
 const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({extended: false}));
 
 /* root defining is required to sendFile in routes and addressing
 them from root project directory.
@@ -50,16 +50,16 @@ const authUrl = "http://auth.c100.hasura.me/";
 const dataUrl = "http://data.c100.hasura.me/v1/query";
 
 //home page route
-app.get('/' ,function (req, res) {
+app.get('/', function (req, res) {
     // console.log(req.cookies.userName);
     var user = "guest";
     const title = "SNIPCODE";
-    console.log(req.cookies);
+    // console.log(req.cookies);
     // console.log(req.headers);
-    if (req.cookies.userName!=="")
+    if (req.cookies.userName !== "")
         user = req.cookies.userName;
 
-    res.render("index", {user: user, title:title});
+    res.render("index", {user: user, title: title});
 });
 
 // login page route
@@ -69,13 +69,13 @@ app.get('/login', function (req, res) {
 });
 
 //post request for login using hasura auth api
-app.post('/login', function(req, res) {
-    const url = authUrl+'login';
+app.post('/login', function (req, res) {
+    const url = authUrl + 'login';
     const username = req.body.username;
     const options = {
         method: 'POST',
         headers: {
-            'Content-Type':'application/json'
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             username: username,
@@ -85,33 +85,33 @@ app.post('/login', function(req, res) {
 
     fetch(url, options)
         .then(function (res) {
-            console.log('status: '+res.status);
+            console.log('status: ' + res.status);
             return res.json();
         }).then(function (json) {
-        console.log(json);
+        // console.log(json);
         if (json['message'])
             res.render("login", {rstatus: json['message']});
-        else{
+        else {
             res.cookie("userId", json['hasura_id']);
-            res.cookie("userName",username);
-            res.cookie("Authorization" , json['auth_token']);
+            res.cookie("userName", username);
+            res.cookie("Authorization", json['auth_token']);
             // console.log(res.cookie);
             res.redirect("/");
         }
 
-    }).catch(function (err){
+    }).catch(function (err) {
         console.error(err);
         res.render("login", {rstatus: "Host Unreachable"});
     });
     // console.log();
 });
 
-app.get('/logout', function(req, res){
-    const url = authUrl+'user/logout';
+app.get('/logout', function (req, res) {
+    const url = authUrl + 'user/logout';
     const options = {
-        method: 'GET',
+        method: 'POST',
         headers: {
-            'Authorization': req.cookies.Authorization
+            'Authorization': 'Bearer ' + req.cookies.Authorization
         }
     };
 
@@ -120,10 +120,11 @@ app.get('/logout', function(req, res){
             return res.json();
         })
         .then(function (json) {
+            console.log(json);
             res.clearCookie('Authorization');
             res.clearCookie('userName');
             res.clearCookie('userId');
-            res.redirect("/login");
+            res.render("login", {rstatus: json['message']});
         }).catch(function (err) {
         console.error(err);
         res.redirect("/");
@@ -132,13 +133,13 @@ app.get('/logout', function(req, res){
 });
 
 //register/signup route
-app.get('/register' , function(req, res) {
+app.get('/register', function (req, res) {
     res.render("register", {rstatus: null});
 });
 
 //post route for register/signup
 app.post('/register', function (req, res) {
-    const url = authUrl+'signup';
+    const url = authUrl + 'signup';
     const username = req.body.username;
     const options = {
         method: 'POST',
@@ -153,9 +154,9 @@ app.post('/register', function (req, res) {
         })
     };
     fetch(url, options, {credentials: 'include'})
-        .then(function(res) {
+        .then(function (res) {
             return res.json();
-        }).then(function(json) {
+        }).then(function (json) {
         // console.log(json);
         if (json['message'])
             res.render('register', {rstatus: json['message']});
@@ -180,9 +181,9 @@ app.post('/register', function (req, res) {
                 })
             };
             fetch(dataUrl, options2)
-                .then(function(res2) {
+                .then(function (res2) {
                     return res2.json();
-                }).then(function(json2) {
+                }).then(function (json2) {
                 // console.log(json2);
                 res.redirect("/");
             })
@@ -195,7 +196,7 @@ app.post('/register', function (req, res) {
 function isLoggedIn(req, res, next) {
 
     // if user is authenticated in the session, carry on
-    if (req.headers.Authorization)
+    if (req.cookies.Authorization)
         return next();
 
     // if they aren't redirect them to the home page
@@ -204,13 +205,55 @@ function isLoggedIn(req, res, next) {
 
 //dashboard route
 app.get('/profile', isLoggedIn, function (req, res) {
-    res.render('dashboard');
+    const url = dataUrl;
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": 'application/json',
+            "Authorization": 'Bearer ' + req.cookies.Authorization
+        },
+        body: JSON.stringify(
+            {
+                type: "bulk",
+                args: [
+                    {
+                        type: "select",
+                        args: {
+                            table: "user_info",
+                            columns: ["name"],
+                            where: {"user_id": req.cookies.userId}
+                        }
+                    },
+                    {
+                        type: "select",
+                        args: {
+                            table: "code",
+                            columns: ["heading", "lang", "last_updated"],
+                            where: {"user_id": req.cookies.userId}
+                        }
+                    }]
+            })
+    };
+
+    fetch(url, options)
+        .then(function (res) {
+            return res.json()
+        })
+        .then(function (json) {
+            // console.log(json);
+            const name = json[0][0];
+            const codes = json[1];
+            console.log(json[1]);
+            res.render('dashboard', {user: req.cookies.userName, name: name, codes: codes})
+        });
 });
 
 //new snip route
-
+app.get("/editsnip/:id", function (req, res) {
+    var url = dataUrl + ''
+});
 
 //server starts here
 app.listen(8080, function () {
-    console.log('Example app listening on port 8080! '+root);
+    console.log('Example app listening on port 8080! ' + root);
 });

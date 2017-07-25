@@ -32,29 +32,32 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown-menu" role="button" aria-haspopup="true" aria-expanded="false">Hi, <%= user%> <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Login</a></li>
-                        <li><a href="#">Register</a></li>
+                    <btn class="btn dropdown-toggle" data-toggle="dropdown">Hi, <%= user %> <span class="caret"></span></btn>
 
+                    <ul class="dropdown-menu">
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Register</a></li>
+                        <li><a href="/logout">Logout</a></li>
                     </ul>
                 </li>
             </ul>
         </div>
+
         <!-- /.navbar-collapse -->
     </div>
     <!-- /.container-fluid -->
 </nav>
 <div class="container">
     <div class="titl text-center">
-        <h1>SnipCode</h1>
+        <h1><%= title %></h1>
     </div>
     <div class="adj text-center">
         <p><span class='typed'></span> your &ltcode/&gt</p>
     </div>
 </div>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
+
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/typed.js/1.1.1/typed.min.js'></script>
 

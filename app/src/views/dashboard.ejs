@@ -57,7 +57,10 @@
             <img src="https://s22.postimg.org/y8vuxtrpd/my_Avatar.png" alt="prof_image" class="img-responsive"/>
         </div>
         <div class="col-xs-6">
-            <p>Name</p>
+            <p>Name:- <% if (name) { %>
+            <span><%= name.name %></span>
+            <% } %>
+            </p>
 
         </div>
     </div>
@@ -65,50 +68,19 @@
         <h4 style="margin-left:2vw;">All Snippets</h4>
     </div>
     <div class="row">
+        <%for (var i=0; i<codes.length; i++) { %>
         <div class="col-md-3 col-sm-4 col-xs-12">
-            <div class="panel panel-primary">
-                <div class="panel-heading text-center">Title</div>
+                <div class="panel panel-primary">
+                <div class="panel-heading text-center"><%= codes[i].heading %></div>
                 <div class="panel-body">
-                    <p class="text-center">Python</p>
+                <p class="text-center"><%= codes[i].lang %></p>
                 </div>
                 <div class="panel-footer">
-                    <p class="text-center">last updated<span>Jul 26</p>
-                </div>
-            </div>
+                <p class="text-center"><%= codes[i].last_updated %></p>
         </div>
-        <div class="col-md-3 col-sm-4 col-xs-12">
-            <div class="panel panel-primary">
-                <div class="panel-heading text-center">Title</div>
-                <div class="panel-body">
-                    <p class="text-center">Python</p>
-                </div>
-                <div class="panel-footer">
-                    <p class="text-center">last updated<span>Jul 26</p>
-                </div>
-            </div>
         </div>
-        <div class="col-md-3 col-sm-4 col-xs-12">
-            <div class="panel panel-primary">
-                <div class="panel-heading text-center">Title</div>
-                <div class="panel-body">
-                    <p class="text-center">Python</p>
-                </div>
-                <div class="panel-footer">
-                    <p class="text-center">last updated<span>Jul 26</p>
-                </div>
-            </div>
         </div>
-        <div class="col-md-3 col-sm-4 col-xs-12">
-            <div class="panel panel-primary">
-                <div class="panel-heading text-center">Title</div>
-                <div class="panel-body">
-                    <p class="text-center">Python</p>
-                </div>
-                <div class="panel-footer">
-                    <p class="text-center">last updated<span>Jul 26</p>
-                </div>
-            </div>
-        </div>
+        <% } %>
     </div>
 </div>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
