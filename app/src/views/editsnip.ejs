@@ -1,0 +1,111 @@
+<head>
+    <meta charset="UTF-8">
+    <title>SnipCode- Edit Snip</title>
+
+
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
+    <link rel='stylesheet prefetch' href='https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css'>
+
+    <link rel="stylesheet" href="/css/snip.css">
+    <link rel="stylesheet" href="/lib/codemirror.css">
+    <script src="/lib/codemirror.js"></script>
+    <script src="/mode/javascript/javascript.js"></script>
+    <script src="/mode/python/python.js"></script>
+    <script src="/mode/htmlmixed/htmlmixed.js"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">SnipCode</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <btn class="btn dropdown-toggle" data-toggle="dropdown">Hi,
+                        sucker <span class="caret"></span></btn>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Register</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<div class="container">
+    <div class="row">
+        <input id="codeId" type="hidden" value="<%= code.id %>">
+        <h2 class="text-center"><%= code.heading %></h2>
+    </div>
+    <div class="row inp">
+        <div class="col-md-9">
+            <textarea id="demotext"><%= code.code_text %></textarea>
+
+        </div>
+        <div class="col-md-offset-1 col-md-2">
+            <h5>Language Used: </h5>
+            <p id="lang"><%= code.lang %></p>
+        </div>
+    </div>
+    <div class="row priv">
+        <div class="col-xs-3 col-md-2">
+            <h4 class="text-center">Private</h4>
+        </div>
+        <div class="col-xs-3 col-md-1">
+            <% if(code.private===true){ %>
+            <input id="private" type="checkbox" checked data-toggle="toggle" data-style="ios">
+            <% } %>
+            <% if(code.private===false){ %>
+            <input id="private" type="checkbox" data-toggle="toggle" data-style="ios">
+            <% } %>
+        </div>
+        <!--<div class="col-xs-4 col-sm-offset-1 col-md-2">-->
+
+            <!--<span class="glyphicon glyphicon-tag"><input type="text" placeholder="Enter tags"></span>-->
+        <!--</div>-->
+    </div>
+    <div class="row">
+        <button id="save" class="btn btn-primary">Save</button>
+    </div>
+    <div id="test"></div>
+</div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
+<script src='https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js'></script>
+
+<script src="/js/edit.js"></script>
+
+<script>
+    var editor = CodeMirror.fromTextArea(document.getElementById("demotext"), {
+        lineNumbers: true,
+        matchBrackets: true
+    });
+    var language = $("#lang").text();
+    console.log(language);
+    if(language==="html")
+        editor.setOption("mode", mixedMode);
+    else
+        editor.setOption("mode", language);
+</script>
+
+</body>

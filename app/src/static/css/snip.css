@@ -1,0 +1,27 @@
+body{
+  background-color: #12428e;
+}
+
+.container {
+  color: #e8ebef;
+}
+
+h5 {
+    color: #FFFFFF;
+}
+
+.priv {
+  margin-top: 4vw;
+  margin-bottom: 2vw;
+}
+
+.inp {
+  color: #000000;
+}
+
+#lang {
+  color: #FFFFFF;
+}
+
+.toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+.toggle.ios .toggle-handle { border-radius: 20px; }
