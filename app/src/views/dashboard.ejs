@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html >
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>A Pen by  Sumit Roy</title>
+    <title>A Pen by Sumit Roy</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
+    <link rel='stylesheet prefetch'
+          href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
 
     <link rel="stylesheet" href="css/dash.css">
 
@@ -17,7 +18,8 @@
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -57,9 +59,10 @@
             <img src="https://s22.postimg.org/y8vuxtrpd/my_Avatar.png" alt="prof_image" class="img-responsive"/>
         </div>
         <div class="col-xs-6">
-            <p>Name:- <% if (name) { %>
-            <span><%= name.name %></span>
-            <% } %>
+            <p>Name:-
+                <% if (name) { %>
+                <span><%= name.name %></span>
+                <% } %>
             </p>
 
         </div>
@@ -68,23 +71,43 @@
         <h4 style="margin-left:2vw;">All Snippets</h4>
     </div>
     <div class="row">
-        <%for (var i=0; i<codes.length; i++) { %>
+        <% for (var i = 0; i < codes.length; i++) { %>
         <div class="col-md-3 col-sm-4 col-xs-12">
-                <div class="panel panel-primary">
-                <div class="panel-heading text-center"><%= codes[i].heading %></div>
+            <% if (codes[i].private == true){ %>
+            <div class="panel panel-warning">
+                <div class="panel-heading text-center">
+                    <a href="/editsnip/<%= codes[i].id %>">
+                    <p><%= codes[i].heading %><span> (Private)</span></p>
+                    </a>
+                </div>
                 <div class="panel-body">
-                <p class="text-center"><%= codes[i].lang %></p>
+                    <p class="text-center"><%= codes[i].lang %></p>
                 </div>
                 <div class="panel-footer">
-                <p class="text-center"><%= codes[i].last_updated %></p>
+                    <p class="text-center"><%= codes[i].last_updated %></p>
+                    <% } %>
+            <% if (codes[i].private == false){ %>
+            <div class="panel panel-primary">
+                <div class="panel-heading text-center heading">
+                    <a href="/editsnip/<%= codes[i].id %>">
+                        <p><%= codes[i].heading %></p>
+                    </a>
+                </div>
+                <div class="panel-body">
+                    <p class="text-center"><%= codes[i].lang %></p>
+                </div>
+                <div class="panel-footer">
+                    <p class="text-center"><%= codes[i].last_updated %></p>
+                    <% } %>
+
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+            </div>
         </div>
-        </div>
-        </div>
-        <% } %>
-    </div>
-</div>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
 
 
 </body>
