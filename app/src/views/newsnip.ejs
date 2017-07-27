@@ -1,0 +1,131 @@
+<head>
+    <meta charset="UTF-8">
+    <title>SnipCode- New Snip</title>
+
+
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
+    <link rel='stylesheet prefetch' href='https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css'>
+
+    <link rel="stylesheet" href="/css/snip.css">
+    <link rel="stylesheet" href="/lib/codemirror.css">
+    <script src="/lib/codemirror.js"></script>
+    <script src="/mode/javascript/javascript.js"></script>
+    <script src="/mode/python/python.js"></script>
+    <script src="/mode/ruby/ruby.js"></script>
+    <script src="/mode/css/css.js"></script>
+    <script src="/mode/shell/shell.js"></script>
+    <script src="/js/loadmode.js"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">SnipCode</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <btn class="btn dropdown-toggle" data-toggle="dropdown">Hi,
+                        sucker <span class="caret"></span></btn>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Register</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+        <input id="title" type="text" placeholder="Your Heading" required>
+        </div>
+    </div>
+    <div class="row inp">
+        <div class="window">
+            <div class="window-header">
+                <div class="action-buttons"></div>
+                <select id="langOption" name="language" class="language fill">
+                    <option value="5">javascript</option>
+                    <option value="1">python</option>
+                    <option value="6">ruby</option>
+                    <option value="8">shell</option>
+                    <option value="9">css</option>
+                </select>
+            </div>
+            <div class="window-body">
+            <textarea id="demotext" class="code-input">/* your code here */</textarea>
+            </div>
+        </div>
+        <div class="col-md-offset-1 col-md-2">
+
+        </div>
+    </div>
+    <div class="row priv">
+        <div class="col-xs-3 col-md-2">
+            <h4 class="text-center">Private</h4>
+        </div>
+        <div class="col-xs-3 col-md-1">
+            <input id="private" type="checkbox" data-toggle="toggle" data-style="ios">
+        </div>
+        <!--<div class="col-xs-4 col-sm-offset-1 col-md-2">-->
+
+        <!--<span class="glyphicon glyphicon-tag"><input type="text" placeholder="Enter tags"></span>-->
+        <!--</div>-->
+    </div>
+    <div class="row">
+        <button id="save" class="btn btn-primary">Save</button>
+    </div>
+    <div id="test"></div>
+</div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
+<script src='https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js'></script>
+<script src="/js/notify.min.js"></script>
+<script src="/js/newsnip.js"></script>
+
+<script>
+    CodeMirror.modeURL = "/mode/%N/%N.js";
+    var editor = CodeMirror.fromTextArea(document.getElementById("demotext"), {
+        lineNumbers: true,
+        matchBrackets: true
+    });
+
+    $('select').on('change', function() {
+        var language = $('#langOption').find(":selected").text();
+        console.log(language);
+        //working on this
+        if(language==="php") {
+            editor.setOption("mode", "php");
+            CodeMirror.autoLoadMode(editor, "php");
+        }
+        else {
+            editor.setOption("mode", language);
+            CodeMirror.autoLoadMode(editor, language);
+        }
+        console.log(editor);
+    });
+
+</script>
+
+</body>
