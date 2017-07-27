@@ -11,7 +11,10 @@
     <script src="/lib/codemirror.js"></script>
     <script src="/mode/javascript/javascript.js"></script>
     <script src="/mode/python/python.js"></script>
-    <script src="/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="/mode/ruby/ruby.js"></script>
+    <script src="/mode/css/css.js"></script>
+    <script src="/mode/shell/shell.js"></script>
+    <script src="/mode/css/css.js"></script>
 </head>
 
 <body>
@@ -57,19 +60,26 @@
         <h2 class="text-center"><%= code.heading %></h2>
     </div>
     <div class="row inp">
-        <div class="col-md-9">
-            <textarea id="demotext"><%= code.code_text %></textarea>
 
-        </div>
-        <div class="col-md-offset-1 col-md-2">
-            <h5>Language Used: </h5>
-            <p id="lang"><%= code.lang %></p>
+        <div class="window">
+            <div class="window-header">
+                <div class="action-buttons"></div>
+                <div class="language">
+                    <p id="lang"><%= code.lang %></p>
+                </div>
+            </div>
+            <div class="window-body">
+            <textarea id="demotext" class="code-input"><%= code.code_text %></textarea>
+            </div>
         </div>
     </div>
+
+    <% if (save) { %>
     <div class="row priv">
         <div class="col-xs-3 col-md-2">
             <h4 class="text-center">Private</h4>
         </div>
+
         <div class="col-xs-3 col-md-1">
             <% if(code.private===true){ %>
             <input id="private" type="checkbox" checked data-toggle="toggle" data-style="ios">
@@ -83,9 +93,12 @@
             <!--<span class="glyphicon glyphicon-tag"><input type="text" placeholder="Enter tags"></span>-->
         <!--</div>-->
     </div>
+    <% } %>
+    <% if (save) { %>
     <div class="row">
         <button id="save" class="btn btn-primary">Save</button>
     </div>
+    <% } %>
     <div id="test"></div>
 </div>
 
@@ -100,12 +113,16 @@
         lineNumbers: true,
         matchBrackets: true
     });
+    editor.setSize("100%");
     var language = $("#lang").text();
     console.log(language);
-    if(language==="html")
-        editor.setOption("mode", mixedMode);
+    if(language==="html")//working on this
+        editor.setOption("mode", "htmlmixed");
     else
         editor.setOption("mode", language);
+    var save = $("#save").text();
+    if (!save)
+        editor.setOption("readOnly", true);
 </script>
 
 </body>
