@@ -21,6 +21,10 @@ body{
     font-family: zilap;
 }
 
+.dropdown p{
+    padding-top: 1vw;
+}
+
 .adj {
     margin-top: 3vw;
     font-size: 4vw;
