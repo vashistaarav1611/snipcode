@@ -2,7 +2,7 @@ body {
   background-color: #eaeff7;
 }
 
-.container-fluid {
+.search {
   margin-top: 10vw;
   margin-left: 14vw;
 }
@@ -27,14 +27,14 @@ input[type=text]:focus {
     width: 100%;
 }
 
-.btn {
+.random {
   -moz-transition: all, ease-in-out 0.5s;
   -o-transition: all, ease-in-out 0.5s;
   -webkit-transition: all, ease-in-out 0.5s;
   transition: all, ease-in-out 0.5s;
 }
 
-.btn:hover {
+.random:hover {
   background: #d65e22;
   text-decoration: none;
 }

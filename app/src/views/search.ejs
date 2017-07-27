@@ -14,7 +14,7 @@
 
 <body>
 <%-include navbar%>
-<div class="container-fluid">
+<div class="container-fluid search">
     <div class="row-fluid">
         <div class="col-xs-111 col-sm-11 col-md-11">
             <form id='searchForm'>
@@ -25,11 +25,11 @@
     <br><br><br><br>
     <div class="row-fluid">
         <div class="col-md-offset-4 col-md-8">
-            <a href="searchcode/random" target="_blank" class="btn btn-warning">Get Random Snippet</a>
+            <a href="searchroute/random" target="_blank" class="btn btn-warning random">Get Random Snippet</a>
         </div>
     </div>
-    <div id="results" class="wrapper text-center">
-        <ul></ul>
+    <div class="wrapper text-center">
+        <ul id="results"></ul>
     </div>
 </div>
 

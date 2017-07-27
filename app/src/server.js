@@ -15,11 +15,11 @@
 // adding all pages ejs. --done
 // adding a user in hasura db and inserting a snipcode using hasura data api --done
 // redirecting logged in user's to dashboard and registered user to new snip
-// segregating header and footer.
-// dynamic dropdown.
+// segregating header and footer. --done
+// dynamic dropdown. --done
+// adding user in search result
 // random snippet
 // restricting users
-// adding more signup options (social login)
 // edit profile page
 // last_updated update while editing snip.
 // aesthetic design issues
@@ -31,7 +31,7 @@
 // most used language
 // contribution heatmap
 // session based login and logout
-
+// adding more signup options (social login)
 /* ------------------------ */
 
 const express = require('express');
@@ -281,10 +281,59 @@ app.get('/newsnip', function (req, res) {
 
 app.get('/searchroute/:id', function (req, res) {
     const id = req.params.id;
-    if (req.cookies.Authorization)
-        res.redirect("/editsnip/"+id);
-    else
-        res.redirect("/viewsnip/"+id);
+    if (id==="random"){
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                type: "count",
+                args: {
+                    table: "code_lang"
+                }
+            })
+        };
+        fetch(dataUrl, options)
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function (json) {
+                // var count = json['count'];
+                console.log(count);
+                const options2 = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        type: "run_sql",
+                        args: {
+                            sql: "SELECT id FROM code_lang OFFSET floor(random()*"+count+") LIMIT 1;"
+                        }
+                    })
+                };
+                fetch(dataUrl, options2)
+                    .then(function (res) {
+                        return res.json();
+                    })
+                    .then(function (json) {
+                        // console.log(json);
+                        const rand = json['result'][1];
+                        res.redirect("/viewsnip/"+rand);
+                    })
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+    }
+    else{
+        if (req.cookies.Authorization)
+            res.redirect("/editsnip/"+id);
+        else
+            res.redirect("/viewsnip/"+id);
+    }
+
 });
 
 
@@ -349,6 +398,7 @@ app.post("/editsnip/:id", function (req, res) {
     const id = req.params.id;
     const codeSnip = req.body.codeSnip;
     const isPrivate = req.body.isPrivate;
+
     // console.log(codeSnip);
     const options = {
         method: 'POST',
@@ -406,6 +456,7 @@ app.post("/editsnip/:id", function (req, res) {
 //view snip
 app.get("/viewsnip/:id", function (req, res) {
     const id = req.params.id;
+    const user = req.cookies.userName;
     const options = {
         method: "POST",
         headers: {
@@ -443,7 +494,8 @@ app.get("/viewsnip/:id", function (req, res) {
             // console.log(json);
             const code = json[0][0];
             const tags = json[1];
-            res.render('editsnip', {code:code, tags:tags, save:false})
+            // console.log(code);
+            res.render('editsnip', {user:user, code:code, tags:tags, save:false})
         })
         .catch(function (err) {
             console.log(err);
@@ -478,7 +530,7 @@ app.post("/search", function (req, res) {
                                 "sql":"SELECT id, heading, code_text, lang, last_updated " +
                                 "FROM code_lang " +
                                 "WHERE to_tsvector('english', heading) @@ " +
-                                "to_tsquery('english', 'firsts') and private=false;"
+                                "to_tsquery('english',"+ "'"+key+"') and private=false;"
                             }
                     },
                     {
