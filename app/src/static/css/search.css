@@ -1,0 +1,73 @@
+body {
+  background-color: #eaeff7;
+}
+
+.container-fluid {
+  margin-top: 10vw;
+  margin-left: 14vw;
+}
+
+input[type=text] {
+    width: 130px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    background-image: url('https://s12.postimg.org/93ob0fd19/search-icon-md.png');
+    background-position: 10px 10px;
+    background-size: 30px 30px;
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+
+input[type=text]:focus {
+    width: 100%;
+}
+
+.btn {
+  -moz-transition: all, ease-in-out 0.5s;
+  -o-transition: all, ease-in-out 0.5s;
+  -webkit-transition: all, ease-in-out 0.5s;
+  transition: all, ease-in-out 0.5s;
+}
+
+.btn:hover {
+  background: #d65e22;
+  text-decoration: none;
+}
+
+.wrapper {
+  margin-top:10vw;
+  margin-left: -10vw;
+}
+
+.wrapper p {
+  color: #3e4144;
+}
+
+.wrapper ul li{
+  color: #eaeff7;
+  border: solid;
+  border-color: #f47d42;
+  margin-bottom: 3vw;
+  max-width: 85vw;
+}
+
+.wrapper ul li a {
+  -moz-transition: all, ease-in-out 0.5s;
+  -o-transition: all, ease-in-out 0.5s;
+  -webkit-transition: all, ease-in-out 0.5s;
+  transition: all, ease-in-out 0.5s;
+}
+
+.wrapper ul li a {
+  color: #d65e22;
+  text-decoration: none;
+}
+
+.wrapper ul li a:hover {
+  color: #9e3d0c;
+}

@@ -10,21 +10,22 @@
 // getting the dashboard page --done
 // edit snip page --done
 // new snip page --done
-// search page like wikipedia search
-// search api for everyone
+// search page like wikipedia search --search
+// search api for everyone --done
 // adding all pages ejs. --done
 // adding a user in hasura db and inserting a snipcode using hasura data api --done
 // redirecting logged in user's to dashboard and registered user to new snip
-// dynamic dropdown.
 // segregating header and footer.
+// dynamic dropdown.
 // edit profile page
 // last_updated update while editing snip.
 // user can see last update changes of thier code
 // most used language
 // total snippets
-// heatmap
 // beautyfying last_updated in dashboard
 // profile image handler
+// most used language
+// contribution heatmap
 /* ------------------------ */
 
 const express = require('express');
@@ -271,6 +272,16 @@ app.get('/newsnip', function (req, res) {
     res.render("newsnip");
 });
 
+//middleware
+
+app.get('/searchroute/:id', function (req, res) {
+    const id = req.params.id;
+    if (req.cookies.Authorization)
+        res.redirect("/editsnip/"+id);
+    else
+        res.redirect("/viewsnip/"+id);
+});
+
 
 //edit snip route
 app.get("/editsnip/:id", function (req, res) {
@@ -382,7 +393,7 @@ app.post("/editsnip/:id", function (req, res) {
         })
         .catch(function (err) {
             console.log(err);
-            res.redirect("/");
+            res.send(err);
         });
 });
 
@@ -431,16 +442,63 @@ app.get("/viewsnip/:id", function (req, res) {
         })
         .catch(function (err) {
             console.log(err);
-        })
+        });
 
 });
 
 // search api goes here
 
-// app.get("/search", function (data) {
-//
-// });
+app.get("/search", function (req, res) {
+    res.render("search");
+});
 
+app.post("/search", function (req, res) {
+    const key = req.body.key;
+    const option = {
+        method:"POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(
+            {
+                type: "bulk",
+                args: [
+                    {
+                        "type": "run_sql",
+                        "args":
+                            {
+                                "sql":"SELECT id, heading, code_text, lang, last_updated " +
+                                "FROM code_lang " +
+                                "WHERE to_tsvector('english', heading) @@ " +
+                                "to_tsquery('english', 'firsts') and private=false;"
+                            }
+                    },
+                    {
+                        type: "select",
+                        args: {
+                            table: "tag",
+                            columns: ["tag"],
+                            where: {"id": 4}//dummy need to be changed
+                        }
+                    }
+                ]
+            }
+        )
+    };
+
+    fetch(dataUrl, option)
+        .then(function (res) {
+            return res.json();
+        })
+        .then(function (json) {
+            // console.log(json[0]['result']);
+            res.send(json[0]['result']);
+        })
+        .catch(function (err) {
+            console.log(err);
+            res.send(err);
+        })
+});
 
 //server starts here
 app.listen(8080, function () {
