@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,23 +7,27 @@
 
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
    <link rel="stylesheet" href="/css/login.css">
+    <script src="https://use.fontawesome.com/c024dd16cc.js"></script>
 
   </head>
   <body>
+  <%-include navbar%>
       <div class="wrapper">
     <form method="post" action="/login" class="form-signin">
       <h2 class="form-signin-heading">Please login</h2>
       <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
       <input type="password" class="form-control" name="password" placeholder="Password" required=""/>      
-      <label class="checkbox">
-        <input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe"> Remember me
-      </label>
+      <!--<label class="checkbox">-->
+        <!--<input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe"> Remember me-->
+      <!--</label>-->
       <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>   
     </form>
           <% if (rstatus) { %>
         <h5 class="text-center alert alert-danger"><%= rstatus %></h5>
           <% } %>
   </div>
+
+  <%-include footer%>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

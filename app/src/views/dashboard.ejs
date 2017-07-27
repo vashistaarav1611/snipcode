@@ -9,46 +9,13 @@
           href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
 
     <link rel="stylesheet" href="css/dash.css">
+    <script src="https://use.fontawesome.com/c024dd16cc.js"></script>
 
 
 </head>
 
 <body>
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">SnipCode</a>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
-                <li><a href="#">About</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <btn class="btn dropdown-toggle" data-toggle="dropdown">Hi,
-                        <%= user %> <span class="caret"></span></btn>
-                    <ul class="dropdown-menu">
-                        <li><a href="/login">Login</a></li>
-                        <li><a href="/register">Register</a></li>
-
-                    </ul>
-                </li>
-            </ul>
-        </div>
-
-        <!-- /.navbar-collapse -->
-    </div>
-    <!-- /.container-fluid -->
-</nav>
+<%- include navbar %>
 
 <div class="container">
     <div class="row">
@@ -77,7 +44,7 @@
             <div class="panel panel-warning">
                 <div class="panel-heading text-center">
                     <a href="/editsnip/<%= codes[i].id %>">
-                    <p><%= codes[i].heading %><span> (Private)</span></p>
+                        <p><%= codes[i].heading %><span> (Private)</span></p>
                     </a>
                 </div>
                 <div class="panel-body">
@@ -86,19 +53,19 @@
                 <div class="panel-footer">
                     <p class="text-center"><%= codes[i].last_updated %></p>
                     <% } %>
-            <% if (codes[i].private == false){ %>
-            <div class="panel panel-primary">
-                <div class="panel-heading text-center heading">
-                    <a href="/editsnip/<%= codes[i].id %>">
-                        <p><%= codes[i].heading %></p>
-                    </a>
-                </div>
-                <div class="panel-body">
-                    <p class="text-center"><%= codes[i].lang %></p>
-                </div>
-                <div class="panel-footer">
-                    <p class="text-center"><%= codes[i].last_updated %></p>
-                    <% } %>
+                    <% if (codes[i].private == false){ %>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading text-center heading">
+                            <a href="/editsnip/<%= codes[i].id %>">
+                                <p><%= codes[i].heading %></p>
+                            </a>
+                        </div>
+                        <div class="panel-body">
+                            <p class="text-center"><%= codes[i].lang %></p>
+                        </div>
+                        <div class="panel-footer">
+                            <p class="text-center"><%= codes[i].last_updated %></p>
+                            <% } %>
 
                         </div>
                     </div>
@@ -106,8 +73,14 @@
                 <% } %>
             </div>
         </div>
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
+
+    </div>
+</div>
+
+<%-include footer%>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
 
 
 </body>

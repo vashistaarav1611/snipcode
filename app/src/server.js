@@ -17,8 +17,12 @@
 // redirecting logged in user's to dashboard and registered user to new snip
 // segregating header and footer.
 // dynamic dropdown.
+// random snippet
+// restricting users
+// adding more signup options (social login)
 // edit profile page
 // last_updated update while editing snip.
+// aesthetic design issues
 // user can see last update changes of thier code
 // most used language
 // total snippets
@@ -26,6 +30,8 @@
 // profile image handler
 // most used language
 // contribution heatmap
+// session based login and logout
+
 /* ------------------------ */
 
 const express = require('express');
@@ -59,10 +65,20 @@ const root = process.cwd();
 const authUrl = "http://auth.c100.hasura.me/";
 const dataUrl = "http://data.c100.hasura.me/v1/query";
 
+//restricting users from some webpage
+function isLoggedIn(req, res, next) {
+
+    // if user is authenticated in the session, carry on
+    if (req.cookies.Authorization)
+        return next();
+
+    // if they aren't redirect them to the home page
+    res.redirect('/');
+}
+
 //home page route
 app.get('/', function (req, res) {
     // console.log(req.cookies.userName);
-    var user = "guest";
     const title = "SNIPCODE";
     // console.log(req.cookies);
     // console.log(req.headers);
@@ -75,7 +91,7 @@ app.get('/', function (req, res) {
 // login page route
 app.get('/login', function (req, res) {
     // console.log(req.cookies);
-    res.render("login", {rstatus: null});
+    res.render("login", {user:null, rstatus: null});
 });
 
 //post request for login using hasura auth api
@@ -134,7 +150,7 @@ app.get('/logout', function (req, res) {
             res.clearCookie('Authorization');
             res.clearCookie('userName');
             res.clearCookie('userId');
-            res.render("login", {rstatus: json['message']});
+            res.render("login", {user:null, rstatus: json['message']});
         }).catch(function (err) {
         console.error(err);
         res.redirect("/");
@@ -144,7 +160,7 @@ app.get('/logout', function (req, res) {
 
 //register/signup route
 app.get('/register', function (req, res) {
-    res.render("register", {rstatus: null});
+    res.render("register", {user:null, rstatus: null});
 });
 
 //post route for register/signup
@@ -206,17 +222,6 @@ app.post('/register', function (req, res) {
     });
 });
 
-
-function isLoggedIn(req, res, next) {
-
-    // if user is authenticated in the session, carry on
-    if (req.cookies.Authorization)
-        return next();
-
-    // if they aren't redirect them to the home page
-    res.redirect('/');
-}
-
 //dashboard route
 app.get('/profile', isLoggedIn, function (req, res) {
     const url = dataUrl;
@@ -269,7 +274,7 @@ app.get('/profile', isLoggedIn, function (req, res) {
 
 //add new snip
 app.get('/newsnip', function (req, res) {
-    res.render("newsnip");
+    res.render("newsnip",{user:req.cookies.userName});
 });
 
 //middleware
@@ -449,7 +454,10 @@ app.get("/viewsnip/:id", function (req, res) {
 // search api goes here
 
 app.get("/search", function (req, res) {
-    res.render("search");
+    if(req.cookies.userName)
+        res.render("search", {user:req.cookies.userName});
+    else
+        res.render("search", {user:null});
 });
 
 app.post("/search", function (req, res) {
