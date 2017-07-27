@@ -3,23 +3,28 @@
 // A nice landing page is to be added. --done
 // finding a way to render css and js files in node--done
 // login and signup using hausura auth api--done
-// logout using hasura auth api.
+// logout using hasura auth api.--done
 // adding user in user_info table to store more info. --done
 // printing logged in user's name.--done
 // showing errors of login and registration --done
-// dynamic dropdown.
-// segregating header and footer.
 // getting the dashboard page --done
-// beautyfying last_updated in dashboard
-// new snip page
+// edit snip page --done
+// new snip page --done
 // search page like wikipedia search
 // search api for everyone
-// redirecting logged in user's to dashboard and registered user to new snip
-// edit profile page
 // adding all pages ejs. --done
-// adding a user in hasura db and inserting a snipcode using hasura data api
+// adding a user in hasura db and inserting a snipcode using hasura data api --done
+// redirecting logged in user's to dashboard and registered user to new snip
+// dynamic dropdown.
+// segregating header and footer.
+// edit profile page
+// last_updated update while editing snip.
 // user can see last update changes of thier code
-
+// most used language
+// total snippets
+// heatmap
+// beautyfying last_updated in dashboard
+// profile image handler
 /* ------------------------ */
 
 const express = require('express');
@@ -261,12 +266,10 @@ app.get('/profile', isLoggedIn, function (req, res) {
 });
 
 
-
 //add new snip
-// app.get('/newsnip', function (req, res) {
-//     res.render("newsnip")
-// });
-
+app.get('/newsnip', function (req, res) {
+    res.render("newsnip");
+});
 
 
 //edit snip route
@@ -305,6 +308,7 @@ app.get("/editsnip/:id", function (req, res) {
 
     fetch(url, options)
         .then(function (res) {
+            // console.log(res.status);
             return res.json()
         })
         .then(function (json) {
@@ -312,7 +316,10 @@ app.get("/editsnip/:id", function (req, res) {
             const code = json[0][0];
             const tags = json[1];
             // console.log(code);
-            res.render('editsnip', {code: code, tags: tags})
+            if (code)
+                res.render('editsnip', {code: code, tags: tags, save:true })
+            else
+                res.redirect("/viewsnip/"+id);
         })
         .catch(function (err) {
             console.log(err);
@@ -378,6 +385,62 @@ app.post("/editsnip/:id", function (req, res) {
             res.redirect("/");
         });
 });
+
+
+//view snip
+app.get("/viewsnip/:id", function (req, res) {
+    const id = req.params.id;
+    const options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(
+            {
+                type: "bulk",
+                args: [
+                    {
+                        type: "select",
+                        args: {
+                            table: "code_lang",
+                            columns: ["id", "heading", "code_text", "lang", "private"],
+                            where: {"id": id},
+                            limit: 1
+                        }
+                    },
+                    {
+                        type: "select",
+                        args: {
+                            table: "tag",
+                            columns: ["tag"],
+                            where: {"id": id}
+                        }
+                    }]
+            })
+    };
+    
+    fetch(dataUrl, options)
+        .then(function (res) {
+            return res.json();
+        })
+        .then(function (json) {
+            // console.log(json);
+            const code = json[0][0];
+            const tags = json[1];
+            res.render('editsnip', {code:code, tags:tags, save:false})
+        })
+        .catch(function (err) {
+            console.log(err);
+        })
+
+});
+
+// search api goes here
+
+// app.get("/search", function (data) {
+//
+// });
+
 
 //server starts here
 app.listen(8080, function () {
