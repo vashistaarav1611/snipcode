@@ -214,7 +214,7 @@ app.post('/register', function (req, res) {
                     return res2.json();
                 }).then(function (json2) {
                 // console.log(json2);
-                res.redirect("/");
+                res.redirect("/newsnip");
             })
                 .catch(function (err) {
                     console.error(err);
