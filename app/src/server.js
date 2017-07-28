@@ -14,7 +14,7 @@
 // search api for everyone --done
 // adding all pages ejs. --done
 // adding a user in hasura db and inserting a snipcode using hasura data api --done
-// redirecting logged in user's to dashboard and registered user to new snip
+// redirecting logged in user's to dashboard and registered user to new snip --done
 // segregating header and footer. --done
 // dynamic dropdown. --done
 // adding user in search result --done
@@ -23,11 +23,10 @@
 // hover effect in panel of snippets
 // most used language --done
 // total snippets --done
-// beautyfying last_updated in dashboard
+// beautyfying last_updated in dashboard --done
 // profile image handler --delay
 // aesthetic design issues
 // user can see last update changes of thier code
-// contribution heatmap
 // adding more signup options (social login)
 // session based login and logout
 // failing conditions check:-
@@ -229,6 +228,7 @@ app.post('/register', function (req, res) {
 app.get('/profile/:id', function (req, res) {
     const url = dataUrl;
     const id = req.params.id;
+    const today = new Date();
     const options = {
         method: 'POST',
         headers: {
@@ -269,7 +269,6 @@ app.get('/profile/:id', function (req, res) {
                         type: "count",
                         args: {
                             table: "code_lang",
-                            columns: ["heading", "id", "lang", "last_updated", "private"],
                             where: {"user_id": id}
                         }
                     }
@@ -288,6 +287,15 @@ app.get('/profile/:id', function (req, res) {
             const lang = json[2]['result'][1][0];
             const count = json[3]['count'];
             // console.log(json[1]);
+            for (var i=0; i<codes.length; i++){
+                var d = new Date(codes[i].last_updated);
+                if (d.getDate() === today.getDate() && d.getMonth()=== today.getMonth() && d.getFullYear()=== today.getFullYear())
+                    codes[i].last_updated = "today";
+                else
+                    codes[i].last_updated = d.getDate()+"/"+d.getMonth()+"/"+d.getFullYear();
+
+                // console.log(d.getFullYear());
+            }
             if(req.cookies.userName)
                 res.render('dashboard', {user:req.cookies.userName , name: name, codes: codes, lang:lang, count:count});
             else
@@ -499,7 +507,7 @@ app.post("/editsnip/:id", function (req, res) {
     const id = req.params.id;
     const codeSnip = req.body.codeSnip;
     const isPrivate = req.body.isPrivate;
-
+    const lastUpdate = new Date();
     // console.log(codeSnip);
     const options = {
         method: 'POST',
@@ -517,7 +525,8 @@ app.post("/editsnip/:id", function (req, res) {
                             table: "code",
                             $set: {
                                 "code_text":codeSnip,
-                                "private":isPrivate
+                                "private":isPrivate,
+                                "last_updated":lastUpdate
                             },
                             where: {"user_id":userId, "id":id},
                             returning: ["id", "heading", "code_text", "lang", "private"]

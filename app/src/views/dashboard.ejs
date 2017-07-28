@@ -22,16 +22,17 @@
         <h2 class="text-center">Dashboard</h2>
     </div>
     <% if(user==name.name) { %>
-    <form method="post" action="/editprofile" style="margin-bottom: 4vw">
+    <!--<form method="post" action="/editprofile" style="margin-bottom: 4vw">-->
         <div class="row">
             <div class="col-xs-5 col-md-6">
                 <img src="https://s22.postimg.org/y8vuxtrpd/my_Avatar.png" alt="prof_image" class="img-responsive"/>
-                <input type="file" placeholder="Inser your peofile pic">
+                <!--<input type="file" placeholder="Inser your peofile pic">-->
             </div>
             <div class="col-xs-6">
                 <h4>Name:-
                     <% if (name) { %>
-                    <input type="text" value="<%= name.full_name %>">
+                    <!--<input type="text" value="<%= name.full_name %>">-->
+                    <%= name.full_name %>
                     <% } %>
                 </h4>
                 <br>
@@ -43,9 +44,9 @@
                     Total No. of Snippets: <%= count %>
                 </h4>
             </div>
-            <input type="button" value="Submit">
+            <!--<input type="button" value="Submit">-->
         </div>
-    </form>
+    <!--</form>-->
     <% } %>
     <% if(user!=name.name) { %>
     <div class="row">
@@ -94,7 +95,9 @@
                             <p class="text-center"><%= codes[i].lang %></p>
                         </div>
                         <div class="panel-footer">
-                            <p class="text-center"><%= codes[i].last_updated %></p>
+                            <p class="text-center">Last updated on <i>
+                                <%= codes[i].last_updated %>
+                                </i></p>
                             <% } %>
 
                         </div>
@@ -111,7 +114,7 @@
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
-
+<script src="/js/profile.js"></script>
 
 </body>
 </html>
