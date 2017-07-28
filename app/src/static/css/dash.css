@@ -10,6 +10,10 @@ body{
   margin-bottom: 2vw;
 }
 
+input[type=text]{
+    color: #0f0548;
+}
+
 .container img {
   max-width: 200px;
   margin-bottom: 4vw;

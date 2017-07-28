@@ -2,13 +2,13 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>A Pen by Sumit Roy</title>
+    <title>Profile of <%= name.name %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel='stylesheet prefetch'
           href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
 
-    <link rel="stylesheet" href="css/dash.css">
+    <link rel="stylesheet" href="/css/dash.css">
     <script src="https://use.fontawesome.com/c024dd16cc.js"></script>
 
 
@@ -21,19 +21,49 @@
     <div class="row">
         <h2 class="text-center">Dashboard</h2>
     </div>
+    <% if(user==name.name) { %>
+    <form method="post" action="/editprofile" style="margin-bottom: 4vw">
+        <div class="row">
+            <div class="col-xs-5 col-md-6">
+                <img src="https://s22.postimg.org/y8vuxtrpd/my_Avatar.png" alt="prof_image" class="img-responsive"/>
+                <input type="file" placeholder="Inser your peofile pic">
+            </div>
+            <div class="col-xs-6">
+                <h4>Name:-
+                    <% if (name) { %>
+                    <input type="text" value="<%= name.full_name %>">
+                    <% } %>
+                </h4>
+                <br>
+                <h4>
+                    Favorite Language: - <%= lang %>
+                </h4>
+                <br>
+                <h4>
+                    Total No. of Snippets: <%= count %>
+                </h4>
+            </div>
+            <input type="button" value="Submit">
+        </div>
+    </form>
+    <% } %>
+    <% if(user!=name.name) { %>
     <div class="row">
         <div class="col-xs-5 col-md-6">
             <img src="https://s22.postimg.org/y8vuxtrpd/my_Avatar.png" alt="prof_image" class="img-responsive"/>
         </div>
         <div class="col-xs-6">
-            <p>Name:-
+            <h4>Name:-
                 <% if (name) { %>
-                <span><%= name.name %></span>
+                <span><%= name.full_name %></span>
                 <% } %>
-            </p>
-
+            </h4>
+            <h4>
+                Most Used Language: - <%= lang %>
+            </h4>
         </div>
     </div>
+    <% } %>
     <div class="row">
         <h4 style="margin-left:2vw;">All Snippets</h4>
     </div>
