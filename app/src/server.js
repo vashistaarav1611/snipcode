@@ -10,28 +10,27 @@
 // getting the dashboard page --done
 // edit snip page --done
 // new snip page --done
-// search page like wikipedia search --search
+// search page like wikipedia search --done
 // search api for everyone --done
 // adding all pages ejs. --done
 // adding a user in hasura db and inserting a snipcode using hasura data api --done
-// redirecting logged in user's to dashboard and registered user to new snip
-// segregating header and footer.
-// dynamic dropdown.
-// random snippet
-// restricting users
-// adding more signup options (social login)
-// edit profile page
-// last_updated update while editing snip.
+// redirecting logged in user's to dashboard and registered user to new snip --done
+// segregating header and footer. --done
+// dynamic dropdown. --done
+// adding user in search result --done
+// random snippet --done
+// restricting users --done
+// hover effect in panel of snippets
+// most used language --done
+// total snippets --done
+// beautyfying last_updated in dashboard --done
+// profile image handler --delay
 // aesthetic design issues
 // user can see last update changes of thier code
-// most used language
-// total snippets
-// beautyfying last_updated in dashboard
-// profile image handler
-// most used language
-// contribution heatmap
+// adding more signup options (social login)
 // session based login and logout
-
+// failing conditions check:-
+// 1.search fail due to database failure resultTuples: notokay
 /* ------------------------ */
 
 const express = require('express');
@@ -73,7 +72,7 @@ function isLoggedIn(req, res, next) {
         return next();
 
     // if they aren't redirect them to the home page
-    res.redirect('/');
+    res.redirect('/login');
 }
 
 //home page route
@@ -114,7 +113,7 @@ app.post('/login', function (req, res) {
             // console.log('status: ' + res.status);
             return res.json();
         }).then(function (json) {
-        // console.log(json);
+        console.log(json);
         if (json['message'])
             res.render("login", {rstatus: json['message']});
         else {
@@ -122,7 +121,7 @@ app.post('/login', function (req, res) {
             res.cookie("userName", username);
             res.cookie("Authorization", json['auth_token']);
             // console.log(res.cookie);
-            res.redirect("/");
+            res.redirect("/profile/"+json['hasura_id']);
         }
 
     }).catch(function (err) {
@@ -167,14 +166,16 @@ app.get('/register', function (req, res) {
 app.post('/register', function (req, res) {
     const url = authUrl + 'signup';
     const username = req.body.username;
+    const fullname = req.body.fullname;
     const options = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            username: req.body.username,
-            password: req.body.password
+            username: username,
+            password: req.body.password,
+            fullname: fullname
             //wil add this after email verification in hasura console
             // email: req.body.email
         })
@@ -201,7 +202,8 @@ app.post('/register', function (req, res) {
                         table: 'user_info',
                         objects: [{
                             'name': username,
-                            'user_id': json['hasura_id']
+                            'user_id': json['hasura_id'],
+                            'full_name': fullname
                         }]
                     }
                 })
@@ -211,7 +213,7 @@ app.post('/register', function (req, res) {
                     return res2.json();
                 }).then(function (json2) {
                 // console.log(json2);
-                res.redirect("/");
+                res.redirect("/newsnip");
             })
                 .catch(function (err) {
                     console.error(err);
@@ -223,7 +225,91 @@ app.post('/register', function (req, res) {
 });
 
 //dashboard route
-app.get('/profile', isLoggedIn, function (req, res) {
+app.get('/profile/:id', function (req, res) {
+    const url = dataUrl;
+    const id = req.params.id;
+    const today = new Date();
+    const options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": 'application/json'
+        },
+        body: JSON.stringify(
+            {
+                type: "bulk",
+                args: [
+                    {
+                        type: "select",
+                        args: {
+                            table: "user_info",
+                            columns: ["name", "full_name"],
+                            where: {"user_id": id}
+                        }
+                    },
+                    {
+                        type: "select",
+                        args: {
+                            table: "code_lang",
+                            columns: ["heading", "id", "lang", "last_updated", "private"],
+                            where: {"user_id": id}
+                        }
+                    },
+                    {
+                        type: "run_sql",
+                        args: {
+                            sql: "SELECT lang, COUNT(*) as cnt\n" +
+                            "FROM code_lang\n" +
+                            "where user_id="+ id +"\n" +
+                            "GROUP BY lang\n" +
+                            "order by cnt desc\n" +
+                            "limit 1"
+                        }
+                    },
+                    {
+                        type: "count",
+                        args: {
+                            table: "code_lang",
+                            where: {"user_id": id}
+                        }
+                    }
+                ]
+            })
+    };
+
+    fetch(url, options)
+        .then(function (res) {
+            return res.json()
+        })
+        .then(function (json) {
+            // console.log(json);
+            const name = json[0][0];
+            const codes = json[1];
+            const lang = json[2]['result'][1][0];
+            const count = json[3]['count'];
+            // console.log(json[1]);
+            for (var i=0; i<codes.length; i++){
+                var d = new Date(codes[i].last_updated);
+                if (d.getDate() === today.getDate() && d.getMonth()=== today.getMonth() && d.getFullYear()=== today.getFullYear())
+                    codes[i].last_updated = "today";
+                else
+                    codes[i].last_updated = d.getDate()+"/"+d.getMonth()+"/"+d.getFullYear();
+
+                // console.log(d.getFullYear());
+            }
+            if(req.cookies.userName)
+                res.render('dashboard', {user:req.cookies.userName , name: name, codes: codes, lang:lang, count:count});
+            else
+                res.render('dashboard', {user:null , name: name, codes: codes, lang:lang, count:count});
+        })
+        .catch(function (err) {
+            console.log(err);
+            res.redirect("/");
+        });
+});
+
+// editprofile route
+
+app.get('/editprofile', isLoggedIn, function (req, res) {
     const url = dataUrl;
     const options = {
         method: 'POST',
@@ -239,7 +325,7 @@ app.get('/profile', isLoggedIn, function (req, res) {
                         type: "select",
                         args: {
                             table: "user_info",
-                            columns: ["name"],
+                            columns: ["name", "full_name"],
                             where: {"user_id": req.cookies.userId}
                         }
                     },
@@ -250,7 +336,27 @@ app.get('/profile', isLoggedIn, function (req, res) {
                             columns: ["heading", "id", "lang", "last_updated", "private"],
                             where: {"user_id": req.cookies.userId}
                         }
-                    }]
+                    },
+                    {
+                        type: "run_sql",
+                        args: {
+                            sql: "SELECT lang, COUNT(*) as cnt\n" +
+                            "FROM code_lang\n" +
+                            "where user_id="+ req.cookies.userId +"\n" +
+                            "GROUP BY lang\n" +
+                            "order by cnt desc\n" +
+                            "limit 1"
+                        }
+                    },
+                    {
+                        type: "count",
+                        args: {
+                            table: "code_lang",
+                            columns: ["heading", "id", "lang", "last_updated", "private"],
+                            where: {"user_id": req.cookies.userId}
+                        }
+                    }
+                    ]
             })
     };
 
@@ -259,11 +365,13 @@ app.get('/profile', isLoggedIn, function (req, res) {
             return res.json()
         })
         .then(function (json) {
-            // console.log(json);
+            // console.log(json[2]['result'][1][0]);
             const name = json[0][0];
             const codes = json[1];
-            // console.log(json[1]);
-            res.render('dashboard', {user: req.cookies.userName, name: name, codes: codes})
+            const lang = json[2]['result'][1][0];
+            const count = json[3]['count'];
+            // console.log(req.cookies.userName, name);
+            res.render('dashboard', {user: req.cookies.userName, name: name, codes: codes, lang:lang, count:count})
         })
         .catch(function (err) {
             console.log(err);
@@ -273,7 +381,7 @@ app.get('/profile', isLoggedIn, function (req, res) {
 
 
 //add new snip
-app.get('/newsnip', function (req, res) {
+app.get('/newsnip', isLoggedIn, function (req, res) {
     res.render("newsnip",{user:req.cookies.userName});
 });
 
@@ -281,10 +389,59 @@ app.get('/newsnip', function (req, res) {
 
 app.get('/searchroute/:id', function (req, res) {
     const id = req.params.id;
-    if (req.cookies.Authorization)
-        res.redirect("/editsnip/"+id);
-    else
-        res.redirect("/viewsnip/"+id);
+    if (id==="random"){
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                type: "count",
+                args: {
+                    table: "code_lang"
+                }
+            })
+        };
+        fetch(dataUrl, options)
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function (json) {
+                // var count = json['count'];
+                console.log(count);
+                const options2 = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        type: "run_sql",
+                        args: {
+                            sql: "SELECT id FROM code_lang OFFSET floor(random()*"+count+") LIMIT 1;"
+                        }
+                    })
+                };
+                fetch(dataUrl, options2)
+                    .then(function (res) {
+                        return res.json();
+                    })
+                    .then(function (json) {
+                        // console.log(json);
+                        const rand = json['result'][1];
+                        res.redirect("/viewsnip/"+rand);
+                    })
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+    }
+    else{
+        if (req.cookies.Authorization)
+            res.redirect("/editsnip/"+id);
+        else
+            res.redirect("/viewsnip/"+id);
+    }
+
 });
 
 
@@ -333,22 +490,24 @@ app.get("/editsnip/:id", function (req, res) {
             const tags = json[1];
             // console.log(code);
             if (code)
-                res.render('editsnip', {code: code, tags: tags, save:true })
+                res.render('editsnip', {user:req.cookies.userName, code: code, tags: tags, save:true });
             else
                 res.redirect("/viewsnip/"+id);
         })
         .catch(function (err) {
             console.log(err);
-            res.redirect("/");
+            res.redirect("/viewsnip/"+id);
         });
 });
 
 
 app.post("/editsnip/:id", function (req, res) {
+    const userId = req.cookies.userId;
     const url = dataUrl;
     const id = req.params.id;
     const codeSnip = req.body.codeSnip;
     const isPrivate = req.body.isPrivate;
+    const lastUpdate = new Date();
     // console.log(codeSnip);
     const options = {
         method: 'POST',
@@ -366,9 +525,10 @@ app.post("/editsnip/:id", function (req, res) {
                             table: "code",
                             $set: {
                                 "code_text":codeSnip,
-                                "private":isPrivate
+                                "private":isPrivate,
+                                "last_updated":lastUpdate
                             },
-                            where: {"user_id":req.cookies.userId, "id":id},
+                            where: {"user_id":userId, "id":id},
                             returning: ["id", "heading", "code_text", "lang", "private"]
                         }
                     },
@@ -394,7 +554,7 @@ app.post("/editsnip/:id", function (req, res) {
             // const code = json[0][0];
             // const tags = json[1];
             // console.log(code);
-            res.send({redirect: '/profile'});
+            res.send({redirect: '/profile/'+userId});
         })
         .catch(function (err) {
             console.log(err);
@@ -406,6 +566,7 @@ app.post("/editsnip/:id", function (req, res) {
 //view snip
 app.get("/viewsnip/:id", function (req, res) {
     const id = req.params.id;
+    const user = req.cookies.userName;
     const options = {
         method: "POST",
         headers: {
@@ -443,7 +604,8 @@ app.get("/viewsnip/:id", function (req, res) {
             // console.log(json);
             const code = json[0][0];
             const tags = json[1];
-            res.render('editsnip', {code:code, tags:tags, save:false})
+            // console.log(code);
+            res.render('editsnip', {user:user, code:code, tags:tags, save:false})
         })
         .catch(function (err) {
             console.log(err);
@@ -475,10 +637,10 @@ app.post("/search", function (req, res) {
                         "type": "run_sql",
                         "args":
                             {
-                                "sql":"SELECT id, heading, code_text, lang, last_updated " +
+                                "sql":"SELECT id, heading, code_text, lang, last_updated, name, user_id " +
                                 "FROM code_lang " +
                                 "WHERE to_tsvector('english', heading) @@ " +
-                                "to_tsquery('english', 'firsts') and private=false;"
+                                "to_tsquery('english',"+ "'"+key+"') and private=false;"
                             }
                     },
                     {

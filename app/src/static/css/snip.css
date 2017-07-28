@@ -71,7 +71,7 @@ input[type=text] {
     /*top: 50%;*/
     /*margin-top: -10px;*/
     height: 90%;
-    padding: 0 1em;
+    padding: 0.5vw 1em;
     text-align: right;
     -webkit-appearance: none;
     appearance: none;
