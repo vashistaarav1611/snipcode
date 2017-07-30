@@ -25,8 +25,8 @@ $(document).ready(function () {
                         for (var i = 1; i < obj.length; i++) {
                             $("#results").append('<a target="_blank" href="/searchroute/' + obj[i][0] + '">' +
                                 '<li><h3 class="title">' + obj[i][1] +
-                                '</h3></a><p class="text">in ' + obj[i][3] + ' by <a href="/profile/'+ obj[i][6] +
-                                '"><i>' + obj[i][5] + '</i></a></p></li>');
+                                '</h3></a><b class="text">in ' + obj[i][3] + ' by <a href="/profile/'+ obj[i][6] +
+                                '"><i>' + obj[i][5] + '</i></a></b></li>');
                         }
                     }
                 }, delay);
