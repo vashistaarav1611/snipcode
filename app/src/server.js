@@ -48,7 +48,6 @@
 // register button animation
 
 
-
 /* ----------- Bug Report ----------*/
 // private not showing in dashboard --resolved
 // new snip codemirror edit not working --resolved
@@ -130,7 +129,7 @@ app.get('/', function (req, res) {
 // login page route
 app.get('/login', function (req, res) {
     // console.log(req.cookies);
-    res.render("login", {user:null, rstatus: null});
+    res.render("login", {user: null, rstatus: null});
 });
 
 //post request for login using hasura auth api
@@ -161,7 +160,7 @@ app.post('/login', function (req, res) {
             res.cookie("userName", username);
             res.cookie("Authorization", json['auth_token']);
             // console.log(res.cookie);
-            res.redirect("/profile/"+json['hasura_id']);
+            res.redirect("/profile/" + json['hasura_id']);
         }
 
     }).catch(function (err) {
@@ -199,7 +198,7 @@ app.get('/logout', function (req, res) {
 
 //register/signup route
 app.get('/register', function (req, res) {
-    res.render("register", {user:null, rstatus: null});
+    res.render("register", {user: null, rstatus: null});
 });
 
 //post route for register/signup
@@ -207,61 +206,69 @@ app.post('/register', function (req, res) {
     const url = authUrl + 'signup';
     const username = req.body.username;
     const fullname = req.body.fullname;
-    const options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            username: username,
-            password: req.body.password,
-            fullname: fullname
-            //wil add this after email verification in hasura console
-            // email: req.body.email
-        })
-    };
-    fetch(url, options, {credentials: 'include'})
-        .then(function (res) {
-            return res.json();
-        }).then(function (json) {
-        // console.log(json);
-        if (json['message'])
-            res.render('register', {rstatus: json['message']});
-        else {
-            res.cookie("userId", json['hasura_id']);
-            res.cookie("userName", username);
-            res.cookie("Authorization", json['auth_token']);
-            const options2 = {
-                method: 'POST',
-                headers: {
-                    "Authorization": "Bearer " + json['auth_token']
-                },
-                body: JSON.stringify({
-                    type: 'insert',
-                    args: {
-                        table: 'user_info',
-                        objects: [{
-                            'name': username,
-                            'user_id': json['hasura_id'],
-                            'full_name': fullname
-                        }]
-                    }
-                })
-            };
-            fetch(dataUrl, options2)
-                .then(function (res2) {
-                    return res2.json();
-                }).then(function (json2) {
-                // console.log(json2);
-                res.redirect("/newsnip");
+    const password = req.body.password;
+    const cpassword = req.body.cpassword;
+    if (password === cpassword) {
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                password: req.body.password,
+                fullname: fullname
+                //wil add this after email verification in hasura console
+                // email: req.body.email
             })
-                .catch(function (err) {
-                    console.error(err);
-                    res.redirect("/");
-                });
-        }
+        };
+        fetch(url, options, {credentials: 'include'})
+            .then(function (res) {
+                return res.json();
+            }).then(function (json) {
+            // console.log(json);
+            if (json['message'])
+                res.render('register', {rstatus: json['message']});
+            else {
+                res.cookie("userId", json['hasura_id']);
+                res.cookie("userName", username);
+                res.cookie("Authorization", json['auth_token']);
+                const options2 = {
+                    method: 'POST',
+                    headers: {
+                        "Authorization": "Bearer " + json['auth_token']
+                    },
+                    body: JSON.stringify({
+                        type: 'insert',
+                        args: {
+                            table: 'user_info',
+                            objects: [{
+                                'name': username,
+                                'user_id': json['hasura_id'],
+                                'full_name': fullname
+                            }]
+                        }
+                    })
+                };
+                fetch(dataUrl, options2)
+                    .then(function (res2) {
+                        return res2.json();
+                    })
+                    .then(function (json2) {
+                    // console.log(json2);
+                    res.redirect("/newsnip");
+                    })
+                    .catch(function (err) {
+                        console.error(err);
+                        res.render("register", {rstatus: "Host Unreachable"});
+                    });
+            }
 
-    });
+        });
+    }
+    else {
+        res.render("register", {rstatus: "Password didn't matched"});
+    }
 });
 
 //dashboard route
@@ -299,7 +306,7 @@ app.get('/profile/:id', function (req, res) {
                         args: {
                             sql: "SELECT lang, COUNT(*) as cnt\n" +
                             "FROM code_lang\n" +
-                            "where user_id="+ id +"\n" +
+                            "where user_id=" + id + "\n" +
                             "GROUP BY lang\n" +
                             "order by cnt desc\n" +
                             "limit 1"
@@ -326,23 +333,29 @@ app.get('/profile/:id', function (req, res) {
             const codes = json[1];
             const count = json[3]['count'];
             var lang = null;
-            if(count!==0)
+            if (count !== 0)
                 lang = json[2]['result'][1][0];
 
             // console.log(json[1]);
-            for (var i=0; i<codes.length; i++){
+            for (var i = 0; i < codes.length; i++) {
                 var d = new Date(codes[i].last_updated);
-                if (d.getDate() === today.getDate() && d.getMonth()=== today.getMonth() && d.getFullYear()=== today.getFullYear())
+                if (d.getDate() === today.getDate() && d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear())
                     codes[i].last_updated = "today";
                 else
-                    codes[i].last_updated = d.getDate()+"/"+d.getMonth()+"/"+d.getFullYear();
+                    codes[i].last_updated = d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear();
 
                 // console.log(d.getFullYear());
             }
-            if(req.cookies.userName)
-                res.render('dashboard', {user:req.cookies.userName , name: name, codes: codes, lang:lang, count:count});
+            if (req.cookies.userName)
+                res.render('dashboard', {
+                    user: req.cookies.userName,
+                    name: name,
+                    codes: codes,
+                    lang: lang,
+                    count: count
+                });
             else
-                res.render('dashboard', {user:null , name: name, codes: codes, lang:lang, count:count});
+                res.render('dashboard', {user: null, name: name, codes: codes, lang: lang, count: count});
         })
         .catch(function (err) {
             console.log(err);
@@ -353,8 +366,8 @@ app.get('/profile/:id', function (req, res) {
 // editprofile route
 
 app.get("/editprofile", isLoggedIn, function (req, res) {
-    if(req.cookies.userId)
-        res.redirect("/profile/"+req.cookies.userId)
+    if (req.cookies.userId)
+        res.redirect("/profile/" + req.cookies.userId)
     else
         res.redirect("/login");
 });
@@ -444,7 +457,7 @@ app.get("/editprofile", isLoggedIn, function (req, res) {
 
 //add new snip
 app.get('/newsnip', isLoggedIn, function (req, res) {
-    res.render("newsnip",{user:req.cookies.userName});
+    res.render("newsnip", {user: req.cookies.userName});
 });
 
 
@@ -493,13 +506,13 @@ app.get("/editsnip/:id", function (req, res) {
             const tags = json[1];
             // console.log(code);
             if (code)
-                res.render('editsnip', {user:req.cookies.userName, code: code, tags: tags, save:true });
+                res.render('editsnip', {user: req.cookies.userName, code: code, tags: tags, save: true});
             else
-                res.redirect("/viewsnip/"+id);
+                res.redirect("/viewsnip/" + id);
         })
         .catch(function (err) {
             console.log(err);
-            res.redirect("/viewsnip/"+id);
+            res.redirect("/viewsnip/" + id);
         });
 });
 
@@ -527,11 +540,11 @@ app.post("/editsnip/:id", function (req, res) {
                         args: {
                             table: "code",
                             $set: {
-                                "code_text":codeSnip,
-                                "private":isPrivate,
-                                "last_updated":lastUpdate
+                                "code_text": codeSnip,
+                                "private": isPrivate,
+                                "last_updated": lastUpdate
                             },
-                            where: {"user_id":userId, "id":id},
+                            where: {"user_id": userId, "id": id},
                             returning: ["id", "heading", "code_text", "lang", "private"]
                         }
                     },
@@ -557,7 +570,7 @@ app.post("/editsnip/:id", function (req, res) {
             // const code = json[0][0];
             // const tags = json[1];
             // console.log(code);
-            res.send({redirect: '/profile/'+userId});
+            res.send({redirect: '/profile/' + userId});
         })
         .catch(function (err) {
             console.log(err);
@@ -608,7 +621,7 @@ app.get("/viewsnip/:id", function (req, res) {
             const code = json[0][0];
             const tags = json[1];
             // console.log(code);
-            res.render('editsnip', {user:user, code:code, tags:tags, save:false})
+            res.render('editsnip', {user: user, code: code, tags: tags, save: false})
         })
         .catch(function (err) {
             console.log(err);
@@ -620,7 +633,7 @@ app.get("/viewsnip/:id", function (req, res) {
 
 app.get('/searchroute/:id', function (req, res) {
     const id = req.params.id;
-    if (id==="random"){
+    if (id === "random") {
         const options = {
             method: "POST",
             headers: {
@@ -648,7 +661,7 @@ app.get('/searchroute/:id', function (req, res) {
                     body: JSON.stringify({
                         type: "run_sql",
                         args: {
-                            sql: "SELECT id FROM code_lang OFFSET floor(random()*"+count+") LIMIT 1;"
+                            sql: "SELECT id FROM code_lang OFFSET floor(random()*" + count + ") LIMIT 1;"
                         }
                     })
                 };
@@ -659,33 +672,33 @@ app.get('/searchroute/:id', function (req, res) {
                     .then(function (json) {
                         // console.log(json);
                         const rand = json['result'][1];
-                        res.redirect("/viewsnip/"+rand);
+                        res.redirect("/viewsnip/" + rand);
                     })
             })
             .catch(function (err) {
                 console.log(err);
             });
     }
-    else{
+    else {
         if (req.cookies.Authorization)
-            res.redirect("/editsnip/"+id);
+            res.redirect("/editsnip/" + id);
         else
-            res.redirect("/viewsnip/"+id);
+            res.redirect("/viewsnip/" + id);
     }
 
 });
 
 app.get("/search", function (req, res) {
-    if(req.cookies.userName)
-        res.render("search", {user:req.cookies.userName});
+    if (req.cookies.userName)
+        res.render("search", {user: req.cookies.userName});
     else
-        res.render("search", {user:null});
+        res.render("search", {user: null});
 });
 
 app.post("/search", function (req, res) {
     const key = req.body.key;
     const option = {
-        method:"POST",
+        method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
@@ -697,10 +710,10 @@ app.post("/search", function (req, res) {
                         "type": "run_sql",
                         "args":
                             {
-                                "sql":"SELECT id, heading, code_text, lang, last_updated, name, user_id " +
+                                "sql": "SELECT id, heading, code_text, lang, last_updated, name, user_id " +
                                 "FROM code_lang " +
                                 "WHERE to_tsvector('english', heading) @@ " +
-                                "to_tsquery('english',"+ "'"+key+"') and private=false;"
+                                "to_tsquery('english'," + "'" + key + "') and private=false;"
                             }
                     },
                     {

@@ -3,11 +3,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-signin-client_id" content="249685586301-kcc3e0i8srbhkuqftvuuej3582btqftl.apps.googleusercontent.com">
     <title>Login Page</title>
 
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
    <link rel="stylesheet" href="/css/login.css">
     <script src="https://use.fontawesome.com/c024dd16cc.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 
   </head>
   <body>
@@ -20,8 +22,10 @@
       <!--<label class="checkbox">-->
         <!--<input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe"> Remember me-->
       <!--</label>-->
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>   
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+        <!--<div  class="g-signin2" data-onsuccess="onSignIn"></div>-->
     </form>
+
           <% if (rstatus) { %>
         <h5 class="text-center alert alert-danger"><%= rstatus %></h5>
           <% } %>
