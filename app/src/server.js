@@ -26,6 +26,7 @@
 // beautyfying last_updated in dashboard --done
 // profile image handler --delay
 // aesthetic design issues
+// notify in login, register page.
 // user can see last update changes of thier code
 // adding more signup options (social login)
 // session based login and logout
@@ -54,6 +55,25 @@ Previous versions of express includes this but from version 4 it comes as an ext
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
+app.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:8080');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
+    next();
+});
 
 
 /* root defining is required to sendFile in routes and addressing
@@ -113,7 +133,7 @@ app.post('/login', function (req, res) {
             // console.log('status: ' + res.status);
             return res.json();
         }).then(function (json) {
-        console.log(json);
+        // console.log(json);
         if (json['message'])
             res.render("login", {rstatus: json['message']});
         else {
@@ -149,7 +169,7 @@ app.get('/logout', function (req, res) {
             res.clearCookie('Authorization');
             res.clearCookie('userName');
             res.clearCookie('userId');
-            res.render("login", {user:null, rstatus: json['message']});
+            res.redirect("/login");
         }).catch(function (err) {
         console.error(err);
         res.redirect("/");
@@ -242,7 +262,7 @@ app.get('/profile/:id', function (req, res) {
                         type: "select",
                         args: {
                             table: "user_info",
-                            columns: ["name", "full_name"],
+                            columns: ["name", "full_name", "bio", "website"],
                             where: {"user_id": id}
                         }
                     },
@@ -284,8 +304,11 @@ app.get('/profile/:id', function (req, res) {
             // console.log(json);
             const name = json[0][0];
             const codes = json[1];
-            const lang = json[2]['result'][1][0];
             const count = json[3]['count'];
+            var lang = null;
+            if(count!==0)
+                lang = json[2]['result'][1][0];
+
             // console.log(json[1]);
             for (var i=0; i<codes.length; i++){
                 var d = new Date(codes[i].last_updated);
@@ -309,75 +332,94 @@ app.get('/profile/:id', function (req, res) {
 
 // editprofile route
 
-app.get('/editprofile', isLoggedIn, function (req, res) {
-    const url = dataUrl;
-    const options = {
-        method: 'POST',
-        headers: {
-            "Content-Type": 'application/json',
-            "Authorization": 'Bearer ' + req.cookies.Authorization
-        },
-        body: JSON.stringify(
-            {
-                type: "bulk",
-                args: [
-                    {
-                        type: "select",
-                        args: {
-                            table: "user_info",
-                            columns: ["name", "full_name"],
-                            where: {"user_id": req.cookies.userId}
-                        }
-                    },
-                    {
-                        type: "select",
-                        args: {
-                            table: "code_lang",
-                            columns: ["heading", "id", "lang", "last_updated", "private"],
-                            where: {"user_id": req.cookies.userId}
-                        }
-                    },
-                    {
-                        type: "run_sql",
-                        args: {
-                            sql: "SELECT lang, COUNT(*) as cnt\n" +
-                            "FROM code_lang\n" +
-                            "where user_id="+ req.cookies.userId +"\n" +
-                            "GROUP BY lang\n" +
-                            "order by cnt desc\n" +
-                            "limit 1"
-                        }
-                    },
-                    {
-                        type: "count",
-                        args: {
-                            table: "code_lang",
-                            columns: ["heading", "id", "lang", "last_updated", "private"],
-                            where: {"user_id": req.cookies.userId}
-                        }
-                    }
-                    ]
-            })
-    };
-
-    fetch(url, options)
-        .then(function (res) {
-            return res.json()
-        })
-        .then(function (json) {
-            // console.log(json[2]['result'][1][0]);
-            const name = json[0][0];
-            const codes = json[1];
-            const lang = json[2]['result'][1][0];
-            const count = json[3]['count'];
-            // console.log(req.cookies.userName, name);
-            res.render('dashboard', {user: req.cookies.userName, name: name, codes: codes, lang:lang, count:count})
-        })
-        .catch(function (err) {
-            console.log(err);
-            res.redirect("/");
-        });
+app.get("/editprofile", isLoggedIn, function (req, res) {
+    if(req.cookies.userId)
+        res.redirect("/profile/"+req.cookies.userId)
+    else
+        res.redirect("/login");
 });
+
+// app.get('/editprofile', isLoggedIn, function (req, res) {
+//     const url = dataUrl;
+//     const today = new Date();
+//     const options = {
+//         method: 'POST',
+//         headers: {
+//             "Content-Type": 'application/json',
+//             "Authorization": 'Bearer ' + req.cookies.Authorization
+//         },
+//         body: JSON.stringify(
+//             {
+//                 type: "bulk",
+//                 args: [
+//                     {
+//                         type: "select",
+//                         args: {
+//                             table: "user_info",
+//                             columns: ["name", "full_name", "bio", "website"],
+//                             where: {"user_id": req.cookies.userId}
+//                         }
+//                     },
+//                     {
+//                         type: "select",
+//                         args: {
+//                             table: "code_lang",
+//                             columns: ["heading", "id", "lang", "last_updated", "private"],
+//                             where: {"user_id": req.cookies.userId}
+//                         }
+//                     },
+//                     {
+//                         type: "run_sql",
+//                         args: {
+//                             sql: "SELECT lang, COUNT(*) as cnt\n" +
+//                             "FROM code_lang\n" +
+//                             "where user_id="+ req.cookies.userId +"\n" +
+//                             "GROUP BY lang\n" +
+//                             "order by cnt desc\n" +
+//                             "limit 1"
+//                         }
+//                     },
+//                     {
+//                         type: "count",
+//                         args: {
+//                             table: "code_lang",
+//                             columns: ["heading", "id", "lang", "last_updated", "private"],
+//                             where: {"user_id": req.cookies.userId}
+//                         }
+//                     }
+//                     ]
+//             })
+//     };
+//
+//     fetch(url, options)
+//         .then(function (res) {
+//             return res.json()
+//         })
+//         .then(function (json) {
+//             // console.log(json);
+//             const name = json[0][0];
+//             const codes = json[1];
+//             const count = json[3]['count'];
+//             var lang = null;
+//             if(count!==0)
+//                 lang = json[2]['result'][1][0];
+//             for (var i=0; i<codes.length; i++){
+//                 var d = new Date(codes[i].last_updated);
+//                 if (d.getDate() === today.getDate() && d.getMonth()=== today.getMonth() && d.getFullYear()=== today.getFullYear())
+//                     codes[i].last_updated = "today";
+//                 else
+//                     codes[i].last_updated = d.getDate()+"/"+d.getMonth()+"/"+d.getFullYear();
+//
+//                 // console.log(d.getFullYear());
+//             }
+//             // console.log(req.cookies.userName, name);
+//             res.render('dashboard', {user: req.cookies.userName, name: name, codes: codes, lang:lang, count:count})
+//         })
+//         .catch(function (err) {
+//             console.log(err);
+//             res.redirect("/");
+//         });
+// });
 
 
 //add new snip
@@ -387,62 +429,7 @@ app.get('/newsnip', isLoggedIn, function (req, res) {
 
 //middleware
 
-app.get('/searchroute/:id', function (req, res) {
-    const id = req.params.id;
-    if (id==="random"){
-        const options = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                type: "count",
-                args: {
-                    table: "code_lang"
-                }
-            })
-        };
-        fetch(dataUrl, options)
-            .then(function (res) {
-                return res.json();
-            })
-            .then(function (json) {
-                // var count = json['count'];
-                console.log(count);
-                const options2 = {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        type: "run_sql",
-                        args: {
-                            sql: "SELECT id FROM code_lang OFFSET floor(random()*"+count+") LIMIT 1;"
-                        }
-                    })
-                };
-                fetch(dataUrl, options2)
-                    .then(function (res) {
-                        return res.json();
-                    })
-                    .then(function (json) {
-                        // console.log(json);
-                        const rand = json['result'][1];
-                        res.redirect("/viewsnip/"+rand);
-                    })
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
-    }
-    else{
-        if (req.cookies.Authorization)
-            res.redirect("/editsnip/"+id);
-        else
-            res.redirect("/viewsnip/"+id);
-    }
 
-});
 
 
 //edit snip route
@@ -615,6 +602,63 @@ app.get("/viewsnip/:id", function (req, res) {
 
 // search api goes here
 
+app.get('/searchroute/:id', function (req, res) {
+    const id = req.params.id;
+    if (id==="random"){
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                type: "count",
+                args: {
+                    table: "code_lang"
+                }
+            })
+        };
+        fetch(dataUrl, options)
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function (json) {
+                var count = json['count'];
+                console.log(count);
+                const options2 = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        type: "run_sql",
+                        args: {
+                            sql: "SELECT id FROM code_lang OFFSET floor(random()*"+count+") LIMIT 1;"
+                        }
+                    })
+                };
+                fetch(dataUrl, options2)
+                    .then(function (res) {
+                        return res.json();
+                    })
+                    .then(function (json) {
+                        // console.log(json);
+                        const rand = json['result'][1];
+                        res.redirect("/viewsnip/"+rand);
+                    })
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+    }
+    else{
+        if (req.cookies.Authorization)
+            res.redirect("/editsnip/"+id);
+        else
+            res.redirect("/viewsnip/"+id);
+    }
+
+});
+
 app.get("/search", function (req, res) {
     if(req.cookies.userName)
         res.render("search", {user:req.cookies.userName});
@@ -668,6 +712,10 @@ app.post("/search", function (req, res) {
             console.log(err);
             res.send(err);
         })
+});
+
+app.get("*", function (req, res) {
+    res.render("error");
 });
 
 //server starts here
