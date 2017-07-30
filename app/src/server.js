@@ -427,10 +427,6 @@ app.get('/newsnip', isLoggedIn, function (req, res) {
     res.render("newsnip",{user:req.cookies.userName});
 });
 
-//middleware
-
-
-
 
 //edit snip route
 app.get("/editsnip/:id", function (req, res) {
