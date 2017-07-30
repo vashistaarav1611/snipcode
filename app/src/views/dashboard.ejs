@@ -21,46 +21,74 @@
     <div class="row">
         <h2 class="text-center">Dashboard</h2>
     </div>
-    <% if(user==name.name) { %>
+    <% if(user == name.name) { %>
     <!--<form method="post" action="/editprofile" style="margin-bottom: 4vw">-->
-        <div class="row">
-            <div class="col-xs-5 col-md-6">
-                <img src="https://s22.postimg.org/y8vuxtrpd/my_Avatar.png" alt="prof_image" class="img-responsive"/>
-                <!--<input type="file" placeholder="Inser your peofile pic">-->
-            </div>
-            <div class="col-xs-6">
-                <h4>Name:-
-                    <% if (name) { %>
-                    <!--<input type="text" value="<%= name.full_name %>">-->
-                    <%= name.full_name %>
-                    <% } %>
-                </h4>
-                <br>
-                <h4>
-                    Favorite Language: - <%= lang %>
-                </h4>
-                <br>
-                <h4>
-                    Total No. of Snippets: <%= count %>
-                </h4>
-            </div>
-            <!--<input type="button" value="Submit">-->
-        </div>
-    <!--</form>-->
-    <% } %>
-    <% if(user!=name.name) { %>
     <div class="row">
         <div class="col-xs-5 col-md-6">
-            <img src="https://s22.postimg.org/y8vuxtrpd/my_Avatar.png" alt="prof_image" class="img-responsive"/>
+            <h4>Name:- <input id="fullName" type="text" placeholder="you can call me" value="<%= name.full_name %>">
+            </h4>
+            <br>
+            <h4>I'm a :- <input id="bio" type="text" placeholder="a short bio" value="<%= name.bio %>"></h4></h4>
+            <br>
+            <h4>Website:- <input id="portfolio" type="text" placeholder="portfolio"
+                                           value="<%= name.website %>"></h4></h4>
+            <button id="update" class="btn btn-primary">Update <span id="load"></span></button>
         </div>
         <div class="col-xs-6">
-            <h4>Name:-
-                <% if (name) { %>
-                <span><%= name.full_name %></span>
-                <% } %>
-            </h4>
+            <h4>Toolbox:- </h4>
+            <br>
+            <% if (lang){ %>
             <h4>
-                Most Used Language: - <%= lang %>
+                Favourite Language:- <%= lang %>
+            </h4>
+            <% } %>
+            <% if (!lang) { %>
+            <h4>
+                Favourite Language:- Give us hint by adding one snippet.
+            </h4>
+            <% } %>
+            <br>
+            <h4>
+                Total No. of Snippets:- <%= count %>
+            </h4>
+
+        </div>
+        <!--<input type="button" value="Submit">-->
+    </div>
+    <!--</form>-->
+    <% } %>
+    <% if(user != name.name) { %>
+    <div class="row">
+        <div class="col-xs-5 col-md-6">
+            <h4>You can call me
+                <span><%= name.full_name %></span>
+            </h4>
+            <br>
+            <h4>I'm :-
+                <span><%= name.bio %></span>
+            </h4>
+            <br>
+            <h4>My Portfolio:-
+                <span><%= name.website %></span>
+            </h4>
+            <br>
+        </div>
+        <div class="col-xs-6">
+            <h4>Toolbox:- </h4>
+            <br>
+            <% if (lang){ %>
+            <h4>
+                Favourite Language: - <%= lang %>
+            </h4>
+            <% } %>
+            <% if (!lang) { %>
+            <h4>
+                Favourite Language: - This person didn't have any snippet. How could we know this?
+            </h4>
+            <% } %>
+            <br>
+            <h4>
+                Total No. of Snippets: <%= count %>
             </h4>
         </div>
     </div>
@@ -71,7 +99,7 @@
     <div class="row">
         <% for (var i = 0; i < codes.length; i++) { %>
         <div class="col-md-3 col-sm-4 col-xs-12">
-            <% if (codes[i].private == true){ %>
+            <% if (codes[i].private == true && user==name.name){ %>
             <div class="panel panel-warning">
                 <div class="panel-heading text-center">
                     <a href="/editsnip/<%= codes[i].id %>">
@@ -82,39 +110,38 @@
                     <p class="text-center"><%= codes[i].lang %></p>
                 </div>
                 <div class="panel-footer">
-                    <p class="text-center"><%= codes[i].last_updated %></p>
-                    <% } %>
-                    <% if (codes[i].private == false){ %>
-                    <div class="panel panel-primary">
-                        <div class="panel-heading text-center heading">
-                            <a href="/editsnip/<%= codes[i].id %>">
-                                <p><%= codes[i].heading %></p>
-                            </a>
-                        </div>
-                        <div class="panel-body">
-                            <p class="text-center"><%= codes[i].lang %></p>
-                        </div>
-                        <div class="panel-footer">
-                            <p class="text-center">Last updated on <i>
-                                <%= codes[i].last_updated %>
-                                </i></p>
-                            <% } %>
-
-                        </div>
-                    </div>
+                    <p class="text-center">Last updated on <i><%= codes[i].last_updated %></i></p>
                 </div>
-                <% } %>
             </div>
+            <% } %>
+            <% if (codes[i].private == false){ %>
+            <div class="panel">
+                <div class="panel-heading text-center heading">
+                    <a href="/editsnip/<%= codes[i].id %>">
+                        <p><%= codes[i].heading %></p>
+                    </a>
+                </div>
+                <div class="panel-body">
+                    <p class="text-center"><%= codes[i].lang %></p>
+                </div>
+                <div class="panel-footer">
+                    <p class="text-center">Last updated on <i>
+                            <%= codes[i].last_updated %>
+                        </i></p>
+                </div>
+            </div>
+            <% } %>
         </div>
-
+        <% } %>
     </div>
 </div>
 
-<%-include footer%>
+<%- include footer %>
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js'></script>
 <script src="/js/profile.js"></script>
+<script src="/js/notify.min.js"></script>
 
 </body>
 </html>

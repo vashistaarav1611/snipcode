@@ -31,6 +31,25 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/typed.js/1.1.1/typed.min.js'></script>
 
 <script src="js/index.js"></script>
+<script>
+    $( document ).ready(function() {
+        var source = [
+            'back.gif',
+            'code.gif',
+            'codeback.gif',
+            'abs.gif',
+            'app.gif',
+            'minecraft.gif'
+        ];
+        var randomNumber = Math.floor(Math.random()*source.length);
+        function fn () {
 
+        }
+        $('body').css('background-image', 'url(/img/'+source[randomNumber]+')');
+        console.log( "ready!" );
+
+    });
+
+</script>
 </body>
 </html>

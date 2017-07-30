@@ -34,6 +34,22 @@
 // 1.search fail due to database failure resultTuples: notokay
 /* ------------------------ */
 
+/*------- Aesthetic ---------*/
+// language name in bold in search page
+// anon dashboard changes:-
+// 1. Name in bold
+// 2. I'm is bio
+// 3. favourite language in bold
+// 4. total snippet in bold
+
+// login button animation
+// register button animation
+
+
+
+/* ----------- Bug Report ----------*/
+// private not showing in dashboard --resolved
+
 const express = require('express');
 const path = require('path');
 const fetch = require('node-fetch');

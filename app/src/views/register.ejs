@@ -1,40 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Snipcode- Signup</title>
 
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-   <link rel="stylesheet" href="/css/login.css">
-      <script src="https://use.fontawesome.com/c024dd16cc.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/login.css">
+    <script src="https://use.fontawesome.com/c024dd16cc.js"></script>
 
-  </head>
-  <body>
-  <%-include navbar%>
-      <div class="wrapper">
+</head>
+<body>
+<%- include navbar %>
+<div class="wrapper">
     <form method="post" class="form-signin">
-      <h2 class="form-signin-heading">Register Here</h2>
-      <!--<input id="email" type="text" class="form-control" name="username" placeholder="Email" required="" autofocus="" />-->
-        <input id="fullname" type="text" class="form-control" name="fulname" placeholder="Full Name" required="" autofocus="" />
-        <input id="username" type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
-      <input id="password" type="password" class="form-control" name="password" placeholder="Password" required=""/>
-      <!--<input type="password" class="form-control" name="password" placeholder="Confirm Password" required="" />    -->
-      <!--<label class="checkbox">-->
+        <h2 class="form-signin-heading">Register Here</h2>
+        <!--<input id="email" type="text" class="form-control" name="username" placeholder="Email" required="" autofocus="" />-->
+        <input id="fullname" type="text" class="form-control" name="fullname" placeholder="Full Name" required=""
+               autofocus=""/>
+        <input id="username" type="text" class="form-control" name="username" placeholder="Username" required=""/>
+        <input id="password" type="password" class="form-control" name="password" placeholder="Password" required=""/>
+        <input id="cpassword" type="password" class="form-control" name="cpassword" placeholder="Confirm Password"
+               required=""/>
+        <!--<label class="checkbox">-->
         <!--<input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe"> Remember me-->
-      <!--</label>-->
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+        <!--</label>-->
+        <button id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
     </form>
-          <% if (rstatus) { %>
-          <h5 class="text-center text-danger"><%= rstatus %></h5>
-          <% } %>
-  </div>
+    <% if (rstatus) { %>
+    <h5 class="text-center text-danger"><%= rstatus %></h5>
+    <% } %>
+</div>
 
-  <%-include footer%>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  </body>
+<%- include footer %>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+</body>
 </html>

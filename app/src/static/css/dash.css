@@ -1,28 +1,36 @@
-body{
-  background-color: #12428e;
+body {
+    background-color: rgba(96, 125, 139, 0.5);
 }
 
 .container {
-  color: #ffffff;
+    color: #5d3232;
 }
 
 .container h2 {
-  margin-bottom: 2vw;
+    margin-bottom: 2vw;
 }
 
-input[type=text]{
-    color: #0f0548;
+input[type=text] {
+    color: #5a84a9;
 }
 
 .container img {
-  max-width: 200px;
-  margin-bottom: 4vw;
+    max-width: 200px;
 }
 
 .heading a p {
-  color: #FFFFFF;
+    color: #FFFFFF;
+}
+
+.panel-heading {
+    background-color: #5a84a9;
 }
 
 .panel p {
-  color: #000000;
+    color: #000000;
+}
+
+#update {
+    background-color: #257ea9;
+    margin-bottom: 1vw;
 }
