@@ -43,18 +43,15 @@
 
     <% if (save) { %>
     <div class="row priv">
-        <div class="col-xs-3 col-md-2">
-            <h4 class="text-center">Private</h4>
-        </div>
 
-        <div class="col-xs-3 col-md-1">
+            <h4>Private &nbsp &nbsp
             <% if(code.private===true){ %>
             <input id="private" type="checkbox" checked data-toggle="toggle" data-style="ios">
             <% } %>
             <% if(code.private===false){ %>
             <input id="private" type="checkbox" data-toggle="toggle" data-style="ios">
             <% } %>
-        </div>
+            </h4>
         <!--<div class="col-xs-4 col-sm-offset-1 col-md-2">-->
 
             <!--<span class="glyphicon glyphicon-tag"><input type="text" placeholder="Enter tags"></span>-->

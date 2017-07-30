@@ -1,10 +1,10 @@
 body{
-  background-color: #12428e;
+  background-color: rgba(96, 125, 139, 0.5);
 }
 
 .CodeMirror {
     font-family: "Ubuntu Mono";
-    height: 800px !important ;
+    /*height: 800px !important ;*/
 }
 
 .container {

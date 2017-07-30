@@ -35,11 +35,11 @@
             <button id="update" class="btn btn-primary">Update <span id="load"></span></button>
         </div>
         <div class="col-xs-6">
-            <h4>Toolbox:- </h4>
+            <h4>User Name:- <b><%= name.name %></b></h4>
             <br>
             <% if (lang){ %>
             <h4>
-                Favourite Language:- <%= lang %>
+                Favourite Language:- <b><%= lang %></b>
             </h4>
             <% } %>
             <% if (!lang) { %>
@@ -49,7 +49,7 @@
             <% } %>
             <br>
             <h4>
-                Total No. of Snippets:- <%= count %>
+                Total No. of Snippets:- <b><%= count %></b>
             </h4>
 
         </div>
@@ -61,24 +61,24 @@
     <div class="row">
         <div class="col-xs-5 col-md-6">
             <h4>You can call me
-                <span><%= name.full_name %></span>
+                <b><%= name.full_name %></b>
             </h4>
             <br>
             <h4>I'm :-
-                <span><%= name.bio %></span>
+                <b><%= name.bio %></b>
             </h4>
             <br>
             <h4>My Portfolio:-
-                <span><%= name.website %></span>
+                <b><%= name.website %></b>
             </h4>
             <br>
         </div>
         <div class="col-xs-6">
-            <h4>Toolbox:- </h4>
+            <h4>Username:- <b><%= name.name %></b></h4>
             <br>
             <% if (lang){ %>
             <h4>
-                Favourite Language: - <%= lang %>
+                Favourite Language: - <b><%= lang %></b>
             </h4>
             <% } %>
             <% if (!lang) { %>
@@ -88,7 +88,7 @@
             <% } %>
             <br>
             <h4>
-                Total No. of Snippets: <%= count %>
+                Total No. of Snippets: <b><%= count %></b>
             </h4>
         </div>
     </div>

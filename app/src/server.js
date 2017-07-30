@@ -25,10 +25,11 @@
 // total snippets --done
 // beautyfying last_updated in dashboard --done
 // profile image handler --delay
-// aesthetic design issues
+// aesthetic design issues --done
+// adding more signup options (social login)
 // notify in login, register page.
 // user can see last update changes of thier code
-// adding more signup options (social login)
+
 // session based login and logout
 // failing conditions check:-
 // 1.search fail due to database failure resultTuples: notokay
@@ -41,6 +42,7 @@
 // 2. I'm is bio
 // 3. favourite language in bold
 // 4. total snippet in bold
+//done
 
 // login button animation
 // register button animation
@@ -49,6 +51,8 @@
 
 /* ----------- Bug Report ----------*/
 // private not showing in dashboard --resolved
+// new snip codemirror edit not working --resolved
+// confirm password not working
 
 const express = require('express');
 const path = require('path');
@@ -594,7 +598,7 @@ app.get("/viewsnip/:id", function (req, res) {
                     }]
             })
     };
-    
+
     fetch(dataUrl, options)
         .then(function (res) {
             return res.json();

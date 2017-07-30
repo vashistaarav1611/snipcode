@@ -69,12 +69,18 @@ $(document).ready(function(){
                             ]
                         }
                     }),
+                    beforeSend: function() {
+                        $('#save').html("<img src='/img/hour.svg' width='40px' height='25px'/>");
+                    },
                     error : function(err){
                         console.error(err);
                         // console.log(data);
                     },
                     success: function (data, textStatus, jqXHR) {
-                        window.location.href="/profile";
+                        setTimeout(function () {
+                            window.location.href="/editprofile";
+                        }, 3000);
+
                     }
                 });
             }

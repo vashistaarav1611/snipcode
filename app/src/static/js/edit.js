@@ -55,13 +55,18 @@ $(document).ready(function(){
                     "isPrivate": isPrivate
                 }
                 ),
+            beforeSend: function() {
+                $('#save').html("<img src='/img/hour.svg' width='40px' height='25px'/>");
+            },
             error : function(err){
                 console.error(err);
                 // console.log(data);
             },
             success: function (data, textStatus, jqXHR) {
-                if (typeof data.redirect === 'string')
-                    window.location.replace(window.location.protocol + "//" + window.location.host + data.redirect);
+                setTimeout(function () {
+                    if (typeof data.redirect === 'string')
+                        window.location.replace(window.location.protocol + "//" + window.location.host + data.redirect);
+                }, 2000);
             }
         });
     });
