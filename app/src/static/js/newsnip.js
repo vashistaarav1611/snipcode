@@ -48,7 +48,7 @@ $(document).ready(function(){
             if (heading){
                 $.ajax({
                     type: "POST",
-                    url: "http://data.c100.hasura.me/v1/query",
+                    url: "http://data.hasura/v1/query",
                     cache: false,
                     crossDomain: true,
                     headers: { 'Content-Type' : 'application/json',
