@@ -508,7 +508,7 @@ app.get("/editsnip/:id", function (req, res) {
             if (json['message']!=="invalid authorization token") {
                 const tags = json[1];
                 const code = json[0][0];
-                console.log(code);
+                // console.log(code);
                 res.render('editsnip', {user: req.cookies.userName, code: code, tags: tags, save: true});
             }
             else
@@ -656,7 +656,7 @@ app.get('/searchroute/:id', function (req, res) {
             })
             .then(function (json) {
                 var count = json['count'];
-                console.log(count);
+                // console.log(count);
                 const options2 = {
                     method: "POST",
                     headers: {
