@@ -32,7 +32,7 @@ $(document).ready(function(){
     // })
 
     $("#save").on('click',function(){
-        console.error("clicked");
+        // console.error("clicked");
         $(this).prop('disabled',true);
         $("#demotext").on('change', updateTextArea);
         // var ssusrid = $(this).data('usrsid');
