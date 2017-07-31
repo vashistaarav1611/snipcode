@@ -504,11 +504,11 @@ app.get("/editsnip/:id", function (req, res) {
         })
         .then(function (json) {
             // console.log(json);
-
-            const tags = json[1];
             // console.log(code);
-            if (json[0][0]) {
+            if (json['message']!=="invalid authorization token") {
+                const tags = json[1];
                 const code = json[0][0];
+                console.log(code);
                 res.render('editsnip', {user: req.cookies.userName, code: code, tags: tags, save: true});
             }
             else
@@ -621,7 +621,7 @@ app.get("/viewsnip/:id", function (req, res) {
             return res.json();
         })
         .then(function (json) {
-            // console.log(json);
+            // console.log(json[0][0]);
             const code = json[0][0];
             const tags = json[1];
             // console.log(code);
