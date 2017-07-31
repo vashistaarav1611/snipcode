@@ -57,7 +57,7 @@ const express = require('express');
 const path = require('path');
 const fetch = require('node-fetch');
 const cookieParser = require('cookie-parser');
-const compression = require('compression')
+const compression = require('compression');
 const app = express();
 
 //setting static files location
@@ -274,14 +274,14 @@ app.post('/register', function (req, res) {
 });
 
 //dashboard route
-app.get('/profile/:id', function (req, res) {
+app.get("/profile/:id", function (req, res) {
     const url = dataUrl;
     const id = req.params.id;
     const today = new Date();
     const options = {
         method: 'POST',
         headers: {
-            "Content-Type": 'application/json'
+            "Content-Type": "application/json"
         },
         body: JSON.stringify(
             {
@@ -327,7 +327,7 @@ app.get('/profile/:id', function (req, res) {
 
     fetch(url, options)
         .then(function (res) {
-            return res.json()
+            return res.json();
         })
         .then(function (json) {
             // console.log(json);
