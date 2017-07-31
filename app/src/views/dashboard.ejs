@@ -31,7 +31,7 @@
             <h4>I'm a :- <input id="bio" type="text" placeholder="a short bio" value="<%= name.bio %>"></h4></h4>
             <br>
             <h4>Website:- <input id="portfolio" type="text" placeholder="portfolio"
-                                           value="<%= name.website %>"></h4></h4>
+                                 value="<%= name.website %>"></h4></h4>
             <button id="update" class="btn btn-primary">Update <span id="load"></span></button>
         </div>
         <div class="col-xs-6">
@@ -98,8 +98,9 @@
     </div>
     <div class="row">
         <% for (var i = 0; i < codes.length; i++) { %>
+        <% if (codes[i].private == true && user == name.name){ %>
         <div class="col-md-3 col-sm-4 col-xs-12">
-            <% if (codes[i].private == true && user==name.name){ %>
+
             <div class="panel panel-warning">
                 <div class="panel-heading text-center">
                     <a href="/editsnip/<%= codes[i].id %>">
@@ -113,8 +114,10 @@
                     <p class="text-center">Last updated on <i><%= codes[i].last_updated %></i></p>
                 </div>
             </div>
-            <% } %>
-            <% if (codes[i].private == false){ %>
+        </div>
+        <% } %>
+        <% if (codes[i].private == false){ %>
+        <div class="col-md-3 col-sm-4 col-xs-12">
             <div class="panel">
                 <div class="panel-heading text-center heading">
                     <a href="/editsnip/<%= codes[i].id %>">
@@ -130,8 +133,8 @@
                         </i></p>
                 </div>
             </div>
-            <% } %>
         </div>
+        <% } %>
         <% } %>
     </div>
 </div>
