@@ -369,7 +369,7 @@ app.get("/profile/:id", function (req, res) {
 
 app.get("/editprofile", isLoggedIn, function (req, res) {
     if (req.cookies.userId)
-        res.redirect("/profile/" + req.cookies.userId)
+        res.redirect("/profile/" + req.cookies.userId);
     else
         res.redirect("/login");
 });
@@ -504,11 +504,13 @@ app.get("/editsnip/:id", function (req, res) {
         })
         .then(function (json) {
             // console.log(json);
-            const code = json[0][0];
+
             const tags = json[1];
             // console.log(code);
-            if (code)
+            if (json[0][0]) {
+                const code = json[0][0];
                 res.render('editsnip', {user: req.cookies.userName, code: code, tags: tags, save: true});
+            }
             else
                 res.redirect("/viewsnip/" + id);
         })
