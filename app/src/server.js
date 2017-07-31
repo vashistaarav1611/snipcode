@@ -57,6 +57,7 @@ const express = require('express');
 const path = require('path');
 const fetch = require('node-fetch');
 const cookieParser = require('cookie-parser');
+const compression = require('compression')
 const app = express();
 
 //setting static files location
@@ -64,6 +65,7 @@ app.use(express.static(path.join(__dirname, 'static')));
 
 // for the love of cookies :P
 app.use(cookieParser());
+app.use(compression());
 
 //setting the view engine
 app.set("view engine", 'ejs');
@@ -75,24 +77,24 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-app.use(function (req, res, next) {
-
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:8080');
-
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
-    // Pass to next layer of middleware
-    next();
-});
+// app.use(function (req, res, next) {
+//
+//     // Website you wish to allow to connect
+//     res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:8080');
+//
+//     // Request methods you wish to allow
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//
+//     // Request headers you wish to allow
+//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//
+//     // Set to true if you need the website to include cookies in the requests sent
+//     // to the API (e.g. in case you use sessions)
+//     res.setHeader('Access-Control-Allow-Credentials', true);
+//
+//     // Pass to next layer of middleware
+//     next();
+// });
 
 
 /* root defining is required to sendFile in routes and addressing
